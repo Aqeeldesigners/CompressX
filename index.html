@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compress-X — Smaller Files, Bigger Possibilities | Free In-Browser Optimizer</title>
+  <meta name="description" content="Compress-X: Fast, secure, client-side Image Compressor, Format Converter (WebP, AVIF, ICO), and PDF Compressor with 100% privacy and zero server uploads.">
+  
+  <!-- PWA Manifest & Theme Color -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0052fe">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Compress-X">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./favicon.png">
+  
+  <!-- Google Font: Public Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Flaticon UIcons (Creative Icon Suite: Solid, Bold & Regular Rounded) -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css">
+
+  <!-- Lucide Icons Fallback -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- JSZip for Bulk Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- PDF.js & PDF-Lib for Client-Side PDF Compression -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  
+  <link rel="stylesheet" href="./style.css?v=4.0">
+  <style id="compress-x-core-styles">
+    /* Global Brand Typography Enforcement — 100% Public Sans */
+    :root {
+      --font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    }
+    *, *::before, *::after {
+      font-family: inherit;
+    }
+    html, body, button, input, select, textarea, optgroup {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+    h1, h2, h3, h4, h5, h6, .brand-logo, .site-logo-text, .split-hero-headline, .split-hero-blazing, .split-hero-fast, .split-hero-dot, .tool-name {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. SLEEK, MINIMAL & CLEAN FULL-WIDTH NAVBAR
+       ========================================================================= -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="brand-logo" onclick="showLandingView()" title="Compress-X — Smaller Files, Bigger Possibilities">
+        <img src="./logo.png" alt="COMPRESS-X" class="site-logo-img" onerror="if(!this.dataset.t){this.dataset.t='1';this.src='/logo.png';}">
+      </a>
+
+      <!-- Nav Menu (Centered) -->
+      <nav class="nav-menu">
+        <a href="#tools-suite" class="nav-item" onclick="showLandingView(); scrollToSection('tools-suite');">Tools Suite</a>
+        <a href="#why-us" class="nav-item" onclick="showLandingView(); scrollToSection('why-us');">Features</a>
+        <a href="#pricing" class="nav-item" onclick="showLandingView(); scrollToSection('pricing');">Pricing</a>
+        <a href="#faq" class="nav-item" onclick="showLandingView(); scrollToSection('faq');">Faq's</a>
+        <a href="#contact" class="nav-item" onclick="showLandingView(); scrollToSection('contact');">Contact Us</a>
+      </nav>
+
+      <!-- Nav Action Button & Auth Controls -->
+      <div class="nav-action-wrapper">
+        <!-- Guest Auth Controls (Logged Out) -->
+        <div id="navGuestAuth" class="nav-auth-buttons">
+          <button class="btn-nav-signin" type="button" onclick="openAuthModal('signin')" title="Sign in to your Compress-X account">
+            <i class="fi fi-rr-user"></i>
+            <span>Sign In</span>
+          </button>
+          <button class="btn-nav-signup" type="button" onclick="openAuthModal('signup')" title="Create a free Compress-X account">
+            <span>Sign Up</span>
+            <i class="fi fi-rr-arrow-up-right nav-signup-arrow"></i>
+          </button>
+        </div>
+
+        <!-- User Profile Pill & Dropdown (Logged In) -->
+        <div id="navUserAuth" class="nav-user-profile-wrap" style="display: none;">
+          <button class="nav-user-pill" id="navUserPillBtn" type="button" onclick="toggleUserDropdown(event)">
+            <div class="nav-user-avatar" id="navUserAvatar">U</div>
+            <div class="nav-user-info-text">
+              <span class="nav-user-name" id="navUserName">User</span>
+              <span class="nav-user-plan-badge badge-plan-free" id="navUserPlanBadge">FREE</span>
+            </div>
+            <i class="fi fi-rr-angle-small-down nav-dropdown-arrow"></i>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div class="user-nav-dropdown" id="userNavDropdown" style="display: none;">
+            <div class="user-dropdown-header">
+              <span class="dropdown-greeting">Signed in as</span>
+              <strong id="userDropdownEmail">user@example.com</strong>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="openUserSubModal()">
+              <i class="fi fi-rr-badge-percent"></i>
+              <span>My Subscription</span>
+            </a>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="scrollToSection('pricing'); closeUserDropdown();">
+              <i class="fi fi-rr-sparkles"></i>
+              <span>Upgrade Plan (PKR)</span>
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="javascript:void(0)" class="dropdown-item text-danger" onclick="userLogout()">
+              <i class="fi fi-rr-sign-out-alt"></i>
+              <span>Sign Out</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       2. LANDING PAGE VIEW (HERO 2-COL, TOOLS, PRICING, FAQ, CONTACT)
+       ========================================================================= -->
+  <main id="landingView" class="view-section active">
+     <!-- =========================================================================
+         2. HERO SECTION: CLEAN & MODERN 2-COLUMN SPLIT (LINEAR & NOTION STYLE)
+         ========================================================================= -->
+    <section class="hero-split-section">
+      <!-- Light Ambient Geometric Grid & Soft Orbs -->
+      <div class="hero-grid-pattern"></div>
+      <div class="hero-orb orb-purple"></div>
+      <div class="hero-orb orb-blue"></div>
+
+      <div class="container hero-split-grid">
+        
+        <!-- Left Column: High-Contrast Bold Typography & Action Buttons -->
+        <div class="hero-left-col">
+          <div class="clean-pill-badge">
+            <span class="clean-badge-dot"></span>
+            <span>100% IN-BROWSER MEDIA OPTIMIZERA</span>
+          </div>
+
+          <h1 class="split-hero-headline">
+            <span class="headline-row">Next-Gen Media</span>
+            <span class="headline-row">Optimization, <span class="split-hero-blazing">Blazing</span></span>
+            <span class="headline-row"><span class="split-hero-fast">Fast & Private</span><span class="split-hero-dot">.</span></span>
+          </h1>
+
+          <p class="split-hero-subline">
+            Compress heavy images, convert next-gen WebP/AVIF formats, and shrink PDF documents right on your device with lossless visual quality and zero server uploads.
+          </p>
+
+          <div class="split-cta-group">
+            <button class="btn-split-primary" onclick="openTool('image-compressor')">
+              <span>EXPLORE STUDIO</span>
+              <i class="fi fi-br-arrow-up-right btn-arrow-ic"></i>
+            </button>
+            <button class="btn-split-outline" onclick="scrollToSection('tools-suite')">
+              <span>VIEW 3 TOOLS</span>
+              <i class="fi fi-br-arrow-up-right btn-arrow-ic"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: 3D Isometric Media Optimizer Hero Visual -->
+        <div class="hero-right-col">
+          <div class="hero-visual-container">
+            <div class="hero-visual-glow"></div>
+            <picture>
+              <source srcset="./hero-image.webp" type="image/webp">
+              <img src="./hero-image.png" alt="Compress-X Smart In-Browser Media Optimizer" class="hero-visual-img" id="heroVisualImage" onerror="if(!this.dataset.t){this.dataset.t='1';this.src='/hero-image.png';}">
+            </picture>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Integrated Hero Marquee / Ticker Slider Bar (Edge-to-Edge Full Width) -->
+      <div class="hero-ticker-wrap">
+        <div class="hero-ticker-pill">
+          
+          <!-- Left Label Badge -->
+          <div class="ticker-badge">
+            <span class="ticker-badge-text">BUILT FOR:</span>
+          </div>
+
+          <!-- Marquee Track -->
+          <div class="ticker-viewport">
+            <div class="ticker-track">
+              
+              <!-- Loop 1 -->
+              <div class="ticker-group">
+                <span class="ticker-item">Web Developers</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">E-Commerce Stores</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Design Agencies</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Photographers</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Mobile App Builders</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">SEO Specialists</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">WebP & AVIF Pipelines</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Confidential PDF Workflows</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Batch Asset Export</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Zero Server Uploads</span>
+                <span class="ticker-dot">•</span>
+              </div>
+
+              <!-- Loop 2 (Exact Duplicate for Seamless Loop) -->
+              <div class="ticker-group" aria-hidden="true">
+                <span class="ticker-item">Web Developers</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">E-Commerce Stores</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Design Agencies</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Photographers</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Mobile App Builders</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">SEO Specialists</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Next-Gen WebP & AVIF</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Confidential PDF Workflows</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Batch Asset Export</span>
+                <span class="ticker-dot">•</span>
+                <span class="ticker-item">Zero Server Uploads</span>
+                <span class="ticker-dot">•</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- The 3 Core Tools Suite Cards Section (Distinct Elevated Section) -->
+    <section class="tools-suite-section" id="tools-suite">
+      <div class="container">
+        
+        <div class="section-title-wrap">
+          <span class="section-kicker">CHOOSE YOUR WORKFLOW</span>
+          <h2 class="section-heading">Three Dedicated Online Tools</h2>
+          <p class="section-subtext">Click on any tool below to launch its dedicated, full-screen creative workspace.</p>
+        </div>
+
+        <div class="tools-three-grid">
+          
+          <!-- Card 1: Image Compressor -->
+          <div class="tool-suite-card card-compressor">
+            <div class="card-accent-line line-purple"></div>
+            <div class="card-icon-bubble bubble-purple">
+              <i class="fi fi-sr-compress-alt"></i>
+            </div>
+            <div class="card-content-wrap">
+              <div class="card-header-flex">
+                <span class="tool-tag tag-purple">Smart Compression</span>
+                <span class="tool-metric">Up to -90%</span>
+              </div>
+              <h3 class="tool-name">Image Compressor</h3>
+              <p class="tool-description">
+                Reduce JPG, PNG, and WebP file sizes drastically while keeping crisp pixel clarity. Features exact target size mode (e.g. Under 100 KB) and interactive split-comparison.
+              </p>
+              <ul class="tool-highlights">
+                <li><i class="fi fi-br-check"></i> AI Balanced Auto Compression</li>
+                <li><i class="fi fi-br-check"></i> Exact Target Size (50KB, 100KB, etc.)</li>
+                <li><i class="fi fi-br-check"></i> Live Before / After Split Slider</li>
+              </ul>
+            </div>
+            <button class="btn-open-tool btn-purple" onclick="openTool('image-compressor')">
+              <span>Open Image Compressor</span>
+              <i class="fi fi-br-arrow-up-right"></i>
+            </button>
+          </div>
+
+          <!-- Card 2: Image Converter -->
+          <div class="tool-suite-card card-converter">
+            <div class="card-accent-line line-blue"></div>
+            <div class="card-icon-bubble bubble-blue">
+              <i class="fi fi-sr-arrows-repeat"></i>
+            </div>
+            <div class="card-content-wrap">
+              <div class="card-header-flex">
+                <span class="tool-tag tag-blue">Format Shifter</span>
+                <span class="tool-metric">6+ Formats</span>
+              </div>
+              <h3 class="tool-name">Image Converter</h3>
+              <p class="tool-description">
+                Transform any photo to modern WebP, AVIF, JPG, PNG, GIF, or ICO Favicon in a single click. Ideal for web developers wanting blazing fast page loads.
+              </p>
+              <ul class="tool-highlights">
+                <li><i class="fi fi-br-check"></i> Next-Gen WebP & AVIF Conversion</li>
+                <li><i class="fi fi-br-check"></i> Instant 32x32 Favicon Generator</li>
+                <li><i class="fi fi-br-check"></i> Batch Transform & Download All (ZIP)</li>
+              </ul>
+            </div>
+            <button class="btn-open-tool btn-blue" onclick="openTool('image-converter')">
+              <span>Open Image Converter</span>
+              <i class="fi fi-br-arrow-up-right"></i>
+            </button>
+          </div>
+
+          <!-- Card 3: PDF Compressor -->
+          <div class="tool-suite-card card-pdf">
+            <div class="card-accent-line line-emerald"></div>
+            <div class="card-icon-bubble bubble-emerald">
+              <i class="fi fi-sr-file-pdf"></i>
+            </div>
+            <div class="card-content-wrap">
+              <div class="card-header-flex">
+                <span class="tool-tag tag-emerald">Document Optimizer</span>
+                <span class="tool-metric">Fast & Safe</span>
+              </div>
+              <h3 class="tool-name">PDF Compressor</h3>
+              <p class="tool-description">
+                Shrink heavy scanned PDF documents, resumes, and portfolios to lightweight files ready for email attachment and portal uploads.
+              </p>
+              <ul class="tool-highlights">
+                <li><i class="fi fi-br-check"></i> Multi-level DPI & Image Compression</li>
+                <li><i class="fi fi-br-check"></i> 100% Private (No File Upload to Cloud)</li>
+                <li><i class="fi fi-br-check"></i> Preserves Text Structure & Quality</li>
+              </ul>
+            </div>
+            <button class="btn-open-tool btn-emerald" onclick="openTool('pdf-compressor')">
+              <span>Open PDF Compressor</span>
+              <i class="fi fi-br-arrow-up-right"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Why Us Clean 3-Card Value Proposition -->
+    <section class="why-us-section" id="why-us">
+      <div class="container">
+        
+        <div class="section-title-wrap">
+          <span class="section-kicker">BUILT DIFFERENTLY</span>
+          <h2 class="section-heading">Why Professionals Love OptiCore</h2>
+        </div>
+
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="why-icon"><i class="fi fi-sr-lock"></i></div>
+            <h4>100% Local Device Privacy</h4>
+            <p>Your photos and confidential PDF documents never leave your browser memory. We never store, inspect, or log your files.</p>
+          </div>
+
+          <div class="why-card">
+            <div class="why-icon"><i class="fi fi-sr-bolt"></i></div>
+            <h4>Instant Canvas Multi-Threading</h4>
+            <p>Direct browser hardware acceleration compresses images in milliseconds without queueing or server lag.</p>
+          </div>
+
+          <div class="why-card">
+            <div class="why-icon"><i class="fi fi-sr-infinity"></i></div>
+            <h4>Zero Limits & Free Forever</h4>
+            <p>No paywalls, no file count limits, and no intrusive watermarks added to your optimized output files.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PRICING PLANS SECTION (PKR CURRENCY & MASTERCARD/VISA BANK CARDS)
+         ========================================================================= -->
+    <section class="pricing-section" id="pricing">
+      <div class="container">
+        
+        <div class="section-title-wrap">
+          <span class="section-kicker">TRANSPARENT PKR PRICING</span>
+          <h2 class="section-heading">Choose The Right Plan for Your Workflow</h2>
+          <p class="section-subtext">Free in-browser optimization tools forever, with professional studio features in Pakistani Rupees (PKR).</p>
+        </div>
+
+        <!-- Billing Cycle Switcher (Monthly vs Yearly 20% OFF) -->
+        <div class="billing-switcher-container">
+          <div class="billing-switcher-box">
+            <button type="button" class="billing-switch-btn active" id="btnBillMonthly" onclick="setBillingCycle('monthly')">
+              <span>Monthly Billing</span>
+            </button>
+            <button type="button" class="billing-switch-btn" id="btnBillYearly" onclick="setBillingCycle('yearly')">
+              <span>Annual Billing</span>
+              <span class="switch-save-pill">SAVE 20%</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          
+          <!-- Plan 1: Free Starter -->
+          <div class="pricing-card">
+            <div class="plan-header">
+              <span class="plan-tag">FREE FOREVER</span>
+              <h3 class="plan-name">Community Free</h3>
+              <p class="plan-desc">For individuals & daily casual image/PDF optimization.</p>
+              <div class="plan-price">
+                <span class="currency">Rs.</span><span class="amount">0</span><span class="period">/ lifetime</span>
+              </div>
+            </div>
+            <ul class="plan-features">
+              <li><i class="fi fi-br-check"></i> 100% Unlimited in-browser compression</li>
+              <li><i class="fi fi-br-check"></i> Multi-format conversion (WebP, JPG, PNG)</li>
+              <li><i class="fi fi-br-check"></i> In-browser PDF document compression</li>
+              <li><i class="fi fi-br-check"></i> Interactive Before / After split inspector</li>
+              <li><i class="fi fi-br-check"></i> Batch ZIP file download</li>
+            </ul>
+            <button class="btn-plan-outline" onclick="scrollToSection('tools-suite')">
+              <span>Start Free Now</span>
+            </button>
+          </div>
+
+          <!-- Plan 2: Pro Studio (Featured Highlight) -->
+          <div class="pricing-card featured-pricing-card">
+            <div class="popular-ribbon"><i class="fi fi-sr-sparkles"></i> MOST POPULAR</div>
+            <div class="plan-header">
+              <span class="plan-tag tag-pro">STUDIO PRO</span>
+              <h3 class="plan-name">Pro Studio</h3>
+              <p class="plan-desc">For designers, photographers & fast-paced agencies.</p>
+              <div class="plan-price">
+                <span class="currency">Rs.</span>
+                <span class="amount" id="priceProAmount">2,499</span>
+                <span class="period" id="priceProPeriod">/ month</span>
+              </div>
+            </div>
+            <ul class="plan-features">
+              <li><i class="fi fi-br-check"></i> <strong>Everything in Community Free</strong></li>
+              <li><i class="fi fi-br-check"></i> AI Super-Resolution & Smart Upscaling</li>
+              <li><i class="fi fi-br-check"></i> Custom Watermark Branding Presets</li>
+              <li><i class="fi fi-br-check"></i> High-Priority Web Workers Engine</li>
+              <li><i class="fi fi-br-check"></i> Cloud Backup & Team Folder Sync</li>
+              <li><i class="fi fi-br-check"></i> 24/7 Priority Engineering Support</li>
+            </ul>
+            <button class="btn-plan-primary" onclick="openSubscriptionCheckout('pro')">
+              <span>Subscribe with Card</span>
+              <i class="fi fi-br-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Plan 3: Enterprise / API -->
+          <div class="pricing-card">
+            <div class="plan-header">
+              <span class="plan-tag">BUSINESS</span>
+              <h3 class="plan-name">Team & API</h3>
+              <p class="plan-desc">Automated compression pipeline & high-volume REST API.</p>
+              <div class="plan-price">
+                <span class="currency">Rs.</span>
+                <span class="amount" id="priceTeamAmount">7,999</span>
+                <span class="period" id="priceTeamPeriod">/ month</span>
+              </div>
+            </div>
+            <ul class="plan-features">
+              <li><i class="fi fi-br-check"></i> <strong>Everything in Pro Studio</strong></li>
+              <li><i class="fi fi-br-check"></i> 100,000 API Compression Calls/mo</li>
+              <li><i class="fi fi-br-check"></i> Dedicated SLA & 99.99% Uptime Guarantee</li>
+              <li><i class="fi fi-br-check"></i> Custom Webhook integrations</li>
+              <li><i class="fi fi-br-check"></i> Multi-seat Team Management</li>
+            </ul>
+            <button class="btn-plan-outline" onclick="openSubscriptionCheckout('team')">
+              <span>Get Team License</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Bank Card Payment Trust Badge Bar -->
+        <div class="payment-trust-strip">
+          <div class="trust-pill-item">
+            <i class="fi fi-rr-shield-check" style="color: #0052fe; font-size: 1.2rem;"></i>
+            <span>256-Bit SSL Encrypted Bank Gateway</span>
+          </div>
+          <div class="trust-cards-group">
+            <span class="card-brand-badge visa-badge">VISA</span>
+            <span class="card-brand-badge mastercard-badge">Mastercard</span>
+            <span class="card-brand-label">Debit & Credit Cards Accepted in PKR</span>
+          </div>
+          <div class="trust-pill-item">
+            <i class="fi fi-rr-refresh" style="color: #10b981; font-size: 1.2rem;"></i>
+            <span>Cancel or Switch Plans Anytime</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         FREQUENTLY ASKED QUESTIONS (FAQ SECTION - 2-COLUMN SPLIT LAYOUT)
+         ========================================================================= -->
+    <section class="faq-section" id="faq">
+      <div class="container">
+        <div class="faq-split-grid">
+          
+          <!-- FAQ Left Column: Title, Subtitle & Support Card -->
+          <div class="faq-left-col">
+            <div class="faq-title-block">
+              <span class="section-kicker">GOT QUESTIONS? WE HAVE ANSWERS</span>
+              <h2 class="section-heading faq-heading">Frequently Asked Questions</h2>
+              <p class="section-subtext faq-subtext">Everything you need to know about our in-browser image optimization and PDF compression technology.</p>
+            </div>
+            
+            <div class="faq-left-card">
+              <div class="faq-card-icon-wrap">
+                <i class="fi fi-sr-question"></i>
+              </div>
+              <h4>Have more questions?</h4>
+              <p>Can't find the answer you are looking for? Our core engineering team is here to assist you.</p>
+              <button class="btn-faq-contact" onclick="scrollToSection('contact')">
+                <i class="fi fi-sr-comment-alt"></i>
+                <span>Reach Out to Us</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- FAQ Right Column: Accordion Questions -->
+          <div class="faq-right-col">
+            <div class="faq-accordion-box">
+              
+              <div class="faq-row active">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">01</span>
+                    <span>Are my uploaded images or PDF documents stored on any server?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p><strong>No, absolutely not.</strong> Compress-X operates 100% inside your local web browser using HTML5 Canvas, Web Workers, and client-side PDF.js/PDF-Lib engines. Your files never leave your computer or smartphone, making it completely private, safe for confidential contracts, and compliant with GDPR.</p>
+                </div>
+              </div>
+
+              <div class="faq-row">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">02</span>
+                    <span>How does Image Compressor keep images sharp after compression?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p>Our intelligent compression heuristic analyzes frequency distribution and removes invisible noise, redundant color data, and unnecessary EXIF stamps while preserving high-contrast edge details. To human eyes, the image looks crisp and identical to the original.</p>
+                </div>
+              </div>
+
+              <div class="faq-row">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">03</span>
+                    <span>Can I compress an image to an exact size (e.g. Under 100 KB)?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p>Yes! In the Image Compressor workspace, switch to <strong>Target File Size</strong> mode, select 50KB, 100KB, 200KB, or type any custom number. The engine performs an automated multi-pass binary search to fit the file precisely under your required limit.</p>
+                </div>
+              </div>
+
+              <div class="faq-row">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">04</span>
+                    <span>Why should I convert my JPG or PNG images to WebP or AVIF?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p>WebP and AVIF are next-generation image formats created specifically for the web. They deliver up to <strong>30% to 50% smaller file sizes</strong> compared to traditional JPEG and PNG without visual degradation, speeding up your website loading time and boosting Google SEO rank.</p>
+                </div>
+              </div>
+
+              <div class="faq-row">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">05</span>
+                    <span>How does client-side PDF Compression work?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p>We render your PDF pages into high-efficiency canvas frames in your browser, apply smart JPEG/lossless image compression to each page's visual elements, and rebuild a lightweight optimized PDF file instantly using PDF-Lib.</p>
+                </div>
+              </div>
+
+              <div class="faq-row">
+                <button class="faq-row-btn">
+                  <div class="faq-title-group">
+                    <span class="faq-num">06</span>
+                    <span>Is there any limit on bulk uploads or file counts?</span>
+                  </div>
+                  <div class="faq-chevron-box"><i class="fi fi-br-angle-small-down faq-row-icon"></i></div>
+                </button>
+                <div class="faq-row-content">
+                  <p>There are zero artificial limits. You can drag and drop dozens of files at once, process them concurrently in your browser, and download all optimized files in a single organized ZIP archive.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         7. ON-PAGE CONTACT US SECTION (CREATIVE & PROFESSIONAL SAAS REDESIGN)
+         ========================================================================= -->
+    <section class="contact-section" id="contact">
+      <div class="container">
+        
+        <div class="section-title-wrap">
+          <span class="section-kicker">GET IN TOUCH</span>
+          <h2 class="section-heading">Let's Start a Conversation</h2>
+          <p class="section-subtext">Have feedback, enterprise questions, or need custom offline tools? Our core team is here to assist.</p>
+        </div>
+
+        <div class="contact-split-box">
+          
+          <!-- Contact Left: Support Hub & Direct Channels -->
+          <div class="contact-info-panel">
+            
+            <!-- Live Engineering Support Hero Card -->
+            <div class="support-hero-card">
+              <div class="support-hero-top">
+                <div class="live-status-row">
+                  <span class="live-dot-ping"></span>
+                  <span>Core Support Online</span>
+                </div>
+                <span class="support-badge"><i class="fi fi-sr-bolt"></i> FAST REPLY</span>
+              </div>
+
+              <h3>We're here to help you optimize faster.</h3>
+              <p>Whether you're automating batch conversions, integrating client-side workflows, or need custom features, our team responds promptly.</p>
+
+              <!-- Mini Trust Grid -->
+              <div class="support-stats-grid">
+                <div class="support-stat-item">
+                  <span class="stat-number">&lt; 2 hrs</span>
+                  <span class="stat-label">Avg. Reply Time</span>
+                </div>
+                <div class="support-stat-item">
+                  <span class="stat-number">100%</span>
+                  <span class="stat-label">In-Browser Privacy</span>
+                </div>
+                <div class="support-stat-item">
+                  <span class="stat-number">24/7</span>
+                  <span class="stat-label">System Uptime</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Direct Channel Cards (Clean, Unified & Interactive) -->
+            <div class="contact-channels-list">
+              
+              <a href="mailto:support@opticore.studio" class="info-card-link">
+                <div class="info-card">
+                  <div class="info-icon icon-blue">
+                    <i class="fi fi-sr-envelope"></i>
+                  </div>
+                  <div class="info-text">
+                    <span class="info-label">Direct Email Support</span>
+                    <strong class="info-val">support@opticore.studio</strong>
+                    <span class="info-hint">Click to launch email client</span>
+                  </div>
+                  <i class="fi fi-br-arrow-up-right info-arrow"></i>
+                </div>
+              </a>
+
+              <div class="info-card">
+                <div class="info-icon icon-cyan">
+                  <i class="fi fi-sr-clock"></i>
+                </div>
+                <div class="info-text">
+                  <span class="info-label">Support Availability</span>
+                  <strong class="info-val">Monday – Saturday (Global Coverage)</strong>
+                  <span class="info-hint">Tickets monitored continuously</span>
+                </div>
+              </div>
+
+              <div class="info-card">
+                <div class="info-icon icon-emerald">
+                  <i class="fi fi-sr-shield-check"></i>
+                </div>
+                <div class="info-text">
+                  <span class="info-label">Zero-Cloud Guarantee</span>
+                  <strong class="info-val">100% Confidential & Secure</strong>
+                  <span class="info-hint">No file uploads to remote servers</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Contact Right: Creative & Professional Form (No Filter Pills) -->
+          <div class="contact-form-panel">
+            
+            <div class="form-header-block">
+              <span class="form-kicker-pill"><i class="fi fi-sr-comment-alt"></i> DIRECT INQUIRY</span>
+              <h3 class="form-card-title">Send Us a Direct Message</h3>
+              <p class="form-card-desc">Fill out your details below and an engineer will reply directly to your inbox.</p>
+            </div>
+
+            <form class="onpage-form" onsubmit="handleContactSubmit(event)">
+              
+              <!-- 2-Column Name & Email -->
+              <div class="form-row-2">
+                <div class="field-item">
+                  <label for="contactFullName">Your Full Name</label>
+                  <div class="input-with-icon">
+                    <i class="fi fi-rr-user"></i>
+                    <input type="text" id="contactFullName" required placeholder="John Doe" class="text-input">
+                  </div>
+                </div>
+                <div class="field-item">
+                  <label for="contactEmail">Email Address</label>
+                  <div class="input-with-icon">
+                    <i class="fi fi-rr-envelope"></i>
+                    <input type="email" id="contactEmail" required placeholder="john@example.com" class="text-input">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Subject / Purpose Field -->
+              <div class="field-item">
+                <label for="contactSubject">Subject / Inquiry Title</label>
+                <div class="input-with-icon">
+                  <i class="fi fi-rr-pen-nib"></i>
+                  <input type="text" id="contactSubject" required placeholder="e.g. Feature request, API question, or bug report" class="text-input">
+                </div>
+              </div>
+
+              <!-- Message Details -->
+              <div class="field-item">
+                <label for="contactMessage">Your Message</label>
+                <div class="input-with-icon textarea-icon-wrap">
+                  <i class="fi fi-rr-comment-dots"></i>
+                  <textarea id="contactMessage" rows="5" required placeholder="Describe your question, request, or feedback in detail..." class="text-textarea"></textarea>
+                </div>
+              </div>
+
+              <!-- Submit & Security Trust Bar -->
+              <div class="form-action-row">
+                <button type="submit" class="btn-form-submit">
+                  <span>Send Message</span>
+                  <i class="fi fi-br-arrow-right"></i>
+                </button>
+                <div class="form-security-badge">
+                  <i class="fi fi-sr-lock"></i>
+                  <span>Zero Spam • 100% Strict Privacy</span>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       3. INTERACTIVE TOOL WORKSPACES (DYNAMICALLY ACTIVATED)
+       ========================================================================= -->
+  <main id="toolWorkspaceView" class="view-section" style="display: none;">
+    <div class="container workspace-container">
+      
+      <!-- Workspace Top Breadcrumb & Switcher -->
+      <div class="workspace-nav-bar">
+        <button class="btn-back-landing" onclick="showLandingView()" title="Return to Landing Page">
+          <i class="fi fi-br-arrow-left"></i>
+          <span>Back to Home</span>
+          <span class="btn-key-hint">ESC</span>
+        </button>
+
+        <div class="workspace-brand-indicator">
+          <span class="workspace-live-dot"></span>
+          <span class="workspace-brand-name">Studio Mode</span>
+          <span class="workspace-badge-sep">•</span>
+          <span class="workspace-privacy-tag"><i class="fi fi-sr-shield-check"></i> 100% In-Browser</span>
+        </div>
+
+        <div class="workspace-tool-switcher">
+          <button class="switch-tool-btn" id="switchImageCompressor" onclick="openTool('image-compressor')">
+            <i class="fi fi-sr-compress-alt"></i> <span>Image Compressor</span>
+          </button>
+          <button class="switch-tool-btn" id="switchImageConverter" onclick="openTool('image-converter')">
+            <i class="fi fi-sr-arrows-repeat"></i> <span>Image Converter</span>
+          </button>
+          <button class="switch-tool-btn" id="switchPdfCompressor" onclick="openTool('pdf-compressor')">
+            <i class="fi fi-sr-file-pdf"></i> <span>PDF Compressor</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TOOL 1: IMAGE COMPRESSOR WORKSPACE -->
+      <div class="tool-content-box" id="workspaceImageCompressor">
+        
+        <div class="tool-banner banner-purple">
+          <div class="banner-ambient-glow"></div>
+          <div class="banner-left-wrap">
+            <div class="tool-banner-icon"><i class="fi fi-sr-compress-alt"></i></div>
+            <div class="banner-text-block">
+              <div class="banner-title-row">
+                <h2>Smart Image Compressor</h2>
+                <span class="banner-engine-pill"><span class="engine-dot-green"></span> AI Lossless Engine</span>
+              </div>
+              <p>Compress JPG, PNG & WebP images with AI-balanced quality or set an exact target KB limit.</p>
+            </div>
+          </div>
+          <div class="banner-right-specs">
+            <span class="spec-pill"><i class="fi fi-sr-bolt"></i> 0ms Latency</span>
+            <span class="spec-pill"><i class="fi fi-sr-microchip"></i> Web Worker Pool</span>
+            <span class="spec-pill"><i class="fi fi-sr-shield-check"></i> Zero Cloud Upload</span>
+          </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="tool-settings-bar">
+          <div class="setting-col">
+            <label class="setting-heading"><i class="fi fi-sr-settings-sliders"></i> Compression Mode</label>
+            <div class="pill-segmented">
+              <button class="pill-toggle active" data-img-mode="smart"><i class="fi fi-sr-sparkles"></i> Smart Auto</button>
+              <button class="pill-toggle" data-img-mode="target"><i class="fi fi-sr-target"></i> Target File Size</button>
+              <button class="pill-toggle" data-img-mode="custom"><i class="fi fi-sr-sliders-h"></i> Custom Quality</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Target Size Input Group -->
+          <div class="setting-col" id="targetSizeControlGroup" style="display: none;">
+            <label class="setting-heading"><i class="fi fi-sr-target"></i> Target Size Limit</label>
+            <div class="target-capsule-row">
+              <button class="target-preset-btn" data-kb="50">50 KB</button>
+              <button class="target-preset-btn active" data-kb="100">100 KB</button>
+              <button class="target-preset-btn" data-kb="200">200 KB</button>
+              <button class="target-preset-btn" data-kb="500">500 KB</button>
+              <div class="custom-kb-box">
+                <input type="number" id="imgTargetKbInput" value="100" min="10" max="25000" class="mini-input">
+                <span>KB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Quality Slider Group -->
+          <div class="setting-col" id="customQualityControlGroup" style="display: none;">
+            <label class="setting-heading">
+              <span>Quality Level</span>
+              <strong id="imgQualityValueText">80%</strong>
+            </label>
+            <input type="range" id="imgQualitySlider" min="5" max="100" value="80" class="range-slider">
+          </div>
+        </div>
+
+        <!-- Image Dropzone -->
+        <div class="dropzone-modern" id="imgCompressDropzone">
+          <input type="file" id="imgCompressFileInput" multiple accept="image/*" class="file-input-hidden">
+          <div class="dropzone-body">
+            <div class="drop-circle circle-purple">
+              <i class="fi fi-sr-cloud-upload-alt"></i>
+            </div>
+            <h3>Drop your images here, or <span class="highlight-text">Browse Files</span></h3>
+            <p>Supports bulk upload of JPG, PNG, WebP, AVIF, and GIF. 100% client-side privacy.</p>
+            <div class="dropzone-cta-row">
+              <span class="btn-dropzone-cta"><i class="fi fi-sr-folder-open"></i> Select Files</span>
+              <button class="btn-demo-sample" id="btnImgCompressSample" type="button">
+                <i class="fi fi-sr-sparkles"></i> Try with Sample 4K Image
+              </button>
+            </div>
+            <div class="dropzone-shortcuts-hint">
+              <i class="fi fi-sr-bolt"></i>
+              <span>Pro Tip: Drag entire folders or press <strong>Ctrl + V</strong> anywhere to paste from clipboard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Results Batch Area -->
+        <div class="batch-results-area" id="imgCompressResults" style="display: none;">
+          <div class="batch-summary-strip">
+            <div class="summary-left-group">
+              <div class="glow-indicator"></div>
+              <div>
+                <h4 id="imgBatchCount">0 Images Processed</h4>
+                <p>Original: <strong id="imgTotalOrig">0 MB</strong> <i class="fi fi-br-arrow-right stat-inline-arrow"></i> Optimized: <strong id="imgTotalComp" class="text-emerald">0 MB</strong></p>
+              </div>
+            </div>
+            <div class="savings-tag-glow" id="imgTotalSavings">0% SAVED</div>
+            <div class="summary-btn-group">
+              <button class="btn-action-ghost" id="btnClearImgCompress">Clear All</button>
+              <button class="btn-action-emerald pulse-btn" id="btnDownloadImgZip">
+                <i class="fi fi-sr-cloud-download-alt"></i> Download All (ZIP)
+              </button>
+            </div>
+          </div>
+
+          <div class="cards-queue-grid" id="imgCompressQueue"></div>
+        </div>
+
+      </div>
+
+      <!-- TOOL 2: IMAGE CONVERTER WORKSPACE -->
+      <div class="tool-content-box" id="workspaceImageConverter" style="display: none;">
+        
+        <div class="tool-banner banner-blue">
+          <div class="banner-ambient-glow"></div>
+          <div class="banner-left-wrap">
+            <div class="tool-banner-icon"><i class="fi fi-sr-arrows-repeat"></i></div>
+            <div class="banner-text-block">
+              <div class="banner-title-row">
+                <h2>Universal Image Converter</h2>
+                <span class="banner-engine-pill pill-cyan"><span class="engine-dot-green"></span> 6+ Next-Gen Formats</span>
+              </div>
+              <p>Convert single or hundreds of photos to WebP, AVIF, JPG, PNG, GIF, or Favicon ICO.</p>
+            </div>
+          </div>
+          <div class="banner-right-specs">
+            <span class="spec-pill"><i class="fi fi-sr-layers"></i> Batch Shifting</span>
+            <span class="spec-pill"><i class="fi fi-sr-microchip"></i> High Fidelity</span>
+            <span class="spec-pill"><i class="fi fi-sr-shield-check"></i> Local RAM Only</span>
+          </div>
+        </div>
+
+        <!-- Format Target Cards -->
+        <div class="tool-settings-bar">
+          <div class="setting-col full-width">
+            <label class="setting-heading"><i class="fi fi-sr-arrows-repeat"></i> Select Target Output Format</label>
+            <div class="format-selection-grid">
+              <div class="fmt-select-card active" data-target-fmt="image/webp">
+                <div class="fmt-card-top">
+                  <span class="fmt-badge-name">WEBP</span>
+                  <span class="fmt-card-check"><i class="fi fi-br-check"></i></span>
+                </div>
+                <span class="fmt-badge-desc">Modern Web Standard</span>
+              </div>
+              <div class="fmt-select-card" data-target-fmt="image/jpeg">
+                <div class="fmt-card-top">
+                  <span class="fmt-badge-name">JPG / JPEG</span>
+                  <span class="fmt-card-check"><i class="fi fi-br-check"></i></span>
+                </div>
+                <span class="fmt-badge-desc">Universal Compatibility</span>
+              </div>
+              <div class="fmt-select-card" data-target-fmt="image/png">
+                <div class="fmt-card-top">
+                  <span class="fmt-badge-name">PNG</span>
+                  <span class="fmt-card-check"><i class="fi fi-br-check"></i></span>
+                </div>
+                <span class="fmt-badge-desc">Transparent & Crisp</span>
+              </div>
+              <div class="fmt-select-card" data-target-fmt="image/avif">
+                <div class="fmt-card-top">
+                  <span class="fmt-badge-name">AVIF</span>
+                  <span class="fmt-card-check"><i class="fi fi-br-check"></i></span>
+                </div>
+                <span class="fmt-badge-desc">Next-Gen Ultra Compact</span>
+              </div>
+              <div class="fmt-select-card" data-target-fmt="image/x-icon">
+                <div class="fmt-card-top">
+                  <span class="fmt-badge-name">ICO</span>
+                  <span class="fmt-card-check"><i class="fi fi-br-check"></i></span>
+                </div>
+                <span class="fmt-badge-desc">Favicon (32x32)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converter Dropzone -->
+        <div class="dropzone-modern" id="imgConvertDropzone">
+          <input type="file" id="imgConvertFileInput" multiple accept="image/*" class="file-input-hidden">
+          <div class="dropzone-body">
+            <div class="drop-circle circle-blue">
+              <i class="fi fi-sr-cloud-upload-alt"></i>
+            </div>
+            <h3>Drop your images here to Convert, or <span class="highlight-text-blue">Browse Files</span></h3>
+            <p>Upload images in any format to instantly convert to selected output format with 100% privacy.</p>
+            <div class="dropzone-cta-row">
+              <span class="btn-dropzone-cta btn-cta-blue"><i class="fi fi-sr-folder-open"></i> Select Files to Convert</span>
+            </div>
+            <div class="dropzone-shortcuts-hint">
+              <i class="fi fi-sr-bolt"></i>
+              <span>Pro Tip: Select target format above, then drop multiple files to convert simultaneously</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converter Results Batch Area -->
+        <div class="batch-results-area" id="imgConvertResults" style="display: none;">
+          <div class="batch-summary-strip">
+            <div class="summary-left-group">
+              <div class="glow-indicator blue-indicator"></div>
+              <div>
+                <h4 id="convertBatchCount">0 Images Converted</h4>
+                <p>Ready for instant download in target format</p>
+              </div>
+            </div>
+            <div class="summary-btn-group">
+              <button class="btn-action-ghost" id="btnClearImgConvert">Clear All</button>
+              <button class="btn-action-blue" id="btnDownloadConvertZip">
+                <i class="fi fi-sr-cloud-download-alt"></i> Download All Converted (ZIP)
+              </button>
+            </div>
+          </div>
+
+          <div class="cards-queue-grid" id="imgConvertQueue"></div>
+        </div>
+
+      </div>
+
+      <!-- TOOL 3: PDF COMPRESSOR WORKSPACE -->
+      <div class="tool-content-box" id="workspacePdfCompressor" style="display: none;">
+        
+        <div class="tool-banner banner-emerald">
+          <div class="banner-ambient-glow"></div>
+          <div class="banner-left-wrap">
+            <div class="tool-banner-icon"><i class="fi fi-sr-file-pdf"></i></div>
+            <div class="banner-text-block">
+              <div class="banner-title-row">
+                <h2>In-Browser PDF Compressor</h2>
+                <span class="banner-engine-pill pill-emerald"><span class="engine-dot-green"></span> Local Canvas & PDF.js</span>
+              </div>
+              <p>Compress heavy PDF documents and scans securely in your browser. No files uploaded to cloud.</p>
+            </div>
+          </div>
+          <div class="banner-right-specs">
+            <span class="spec-pill"><i class="fi fi-sr-document"></i> Multi-Page Support</span>
+            <span class="spec-pill"><i class="fi fi-sr-microchip"></i> Vector Engine</span>
+            <span class="spec-pill"><i class="fi fi-sr-shield-check"></i> 100% Memory Safe</span>
+          </div>
+        </div>
+
+        <!-- PDF Compression Preset Selector -->
+        <div class="tool-settings-bar">
+          <div class="setting-col">
+            <label class="setting-heading"><i class="fi fi-sr-dashboard"></i> Compression Strength</label>
+            <div class="pill-segmented">
+              <button class="pdf-preset-btn" data-pdf-preset="light"><i class="fi fi-sr-feather"></i> Light (Hi-Res)</button>
+              <button class="pdf-preset-btn active" data-pdf-preset="medium"><i class="fi fi-sr-check-circle"></i> Medium (Recommended)</button>
+              <button class="pdf-preset-btn" data-pdf-preset="strong"><i class="fi fi-sr-compress-alt"></i> Maximum Compression</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Dropzone -->
+        <div class="dropzone-modern" id="pdfDropzone">
+          <input type="file" id="pdfFileInput" multiple accept="application/pdf" class="file-input-hidden">
+          <div class="dropzone-body">
+            <div class="drop-circle circle-emerald">
+              <i class="fi fi-sr-upload"></i>
+            </div>
+            <h3>Drop your PDF documents here, or <span class="highlight-text-emerald">Browse PDF Files</span></h3>
+            <p>Supports scanned PDFs, reports, ebooks & portfolios. 100% private in-browser compression.</p>
+            <div class="dropzone-cta-row">
+              <span class="btn-dropzone-cta btn-cta-emerald"><i class="fi fi-sr-folder-open"></i> Select PDF Files</span>
+            </div>
+            <div class="dropzone-shortcuts-hint">
+              <i class="fi fi-sr-shield-check"></i>
+              <span>Confidentiality Guaranteed: PDF pages are processed strictly in local browser memory</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Results Queue Area -->
+        <div class="batch-results-area" id="pdfResults" style="display: none;">
+          <div class="batch-summary-strip">
+            <div class="summary-left-group">
+              <div class="glow-indicator"></div>
+              <div>
+                <h4 id="pdfBatchCount">0 PDFs Compressed</h4>
+                <p>Original: <strong id="pdfTotalOrig">0 MB</strong> <i class="fi fi-br-arrow-right stat-inline-arrow"></i> Optimized: <strong id="pdfTotalComp" class="text-emerald">0 MB</strong></p>
+              </div>
+            </div>
+            <div class="savings-tag-glow" id="pdfTotalSavings">0% SAVED</div>
+            <div class="summary-btn-group">
+              <button class="btn-action-ghost" id="btnClearPdf">Clear All</button>
+            </div>
+          </div>
+
+          <div class="cards-queue-grid" id="pdfQueue"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       4. PREMIUM MODERN SAAS FOOTER (LINEAR / VERCEL INSPIRED)
+       ========================================================================= -->
+  <footer class="site-footer">
+    
+    <!-- Top Ambient Radial Glow -->
+    <div class="footer-ambient-glow"></div>
+
+    <div class="container">
+      
+      <!-- Upper Main Grid -->
+      <div class="footer-top-grid">
+        
+        <!-- Column 1: Brand & Identity & Socials -->
+        <div class="footer-brand-column">
+          <a href="#" class="brand-logo footer-brand" onclick="showLandingView()" title="Compress-X">
+            <img src="./logo-light.png" alt="COMPRESS-X" class="footer-logo-img" onerror="if(!this.dataset.t){this.dataset.t='1';this.src='/logo-light.png';}">
+          </a>
+          <p class="footer-desc">
+            Next-generation in-browser media optimization suite. Compress images, shift modern formats (WebP, AVIF), and shrink heavy PDF documents with zero server uploads and zero latency.
+          </p>
+          
+          <div class="footer-trust-badge">
+            <span class="trust-pulse-dot"></span>
+            <span>100% Client-Side Private • Zero Cloud Logs</span>
+          </div>
+
+          <!-- Social Links -->
+          <div class="footer-social-row">
+            <a href="https://github.com" target="_blank" rel="noopener" class="footer-social-btn" title="GitHub" aria-label="GitHub">
+              <i class="fi fi-brands-github"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener" class="footer-social-btn" title="X / Twitter" aria-label="X / Twitter">
+              <i class="fi fi-brands-twitter"></i>
+            </a>
+            <a href="https://discord.com" target="_blank" rel="noopener" class="footer-social-btn" title="Discord Community" aria-label="Discord">
+              <i class="fi fi-brands-discord"></i>
+            </a>
+            <a href="mailto:support@opticore.studio" class="footer-social-btn" title="Email Us" aria-label="Email">
+              <i class="fi fi-sr-envelope"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Tools Suite -->
+        <div class="footer-col">
+          <h5 class="footer-col-title">Studio Tools</h5>
+          <ul class="footer-nav-list">
+            <li>
+              <a href="javascript:void(0)" onclick="openTool('image-compressor')">
+                <span>Image Compressor</span>
+                <span class="nav-mini-tag">Popular</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="openTool('image-converter')">
+                <span>Image Converter</span>
+                <span class="nav-mini-tag tag-cyan">6+ Formats</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="openTool('pdf-compressor')">
+                <span>PDF Compressor</span>
+              </a>
+            </li>
+            <li>
+              <a href="#pricing">
+                <span>Pricing Plans</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="triggerPwaInstall()">
+                <span>Install Desktop App</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Platform & Trust -->
+        <div class="footer-col">
+          <h5 class="footer-col-title">Resources & Trust</h5>
+          <ul class="footer-nav-list">
+            <li><a href="#why-us">Platform Features</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+            <li><a href="#contact">Contact Support</a></li>
+            <li><a href="javascript:void(0)" id="footerPrivacyLink">Privacy Policy</a></li>
+            <li><a href="javascript:void(0)" id="footerTermsLink">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Newsletter & Live Hub -->
+        <div class="footer-col footer-newsletter-col">
+          <h5 class="footer-col-title">Stay in the Loop</h5>
+          <p class="newsletter-sub">
+            Get notified when new format algorithms, AI upscaling, and offline studio updates are released.
+          </p>
+          
+          <form class="newsletter-form-modern" onsubmit="handleNewsletterSubmit(event)">
+            <div class="newsletter-input-wrap">
+              <i class="fi fi-rr-envelope newsletter-ic"></i>
+              <input type="email" required placeholder="Enter work email..." class="newsletter-input-modern">
+              <button type="submit" class="btn-newsletter-modern" title="Subscribe">
+                <span>Join</span>
+                <i class="fi fi-br-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+
+          <div class="footer-engine-card">
+            <div class="engine-card-top">
+              <span class="engine-live-dot"></span>
+              <span class="engine-title">Local Engine Operational</span>
+            </div>
+            <p class="engine-desc">HTML5 Canvas & WebAssembly engines run 100% in your local browser memory.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <div class="footer-bottom-flex">
+          <div class="footer-copyright-group">
+            <span class="copyright">© 2026 Compress-X Studio. All rights reserved.</span>
+            <span class="copyright-sep">•</span>
+            <span class="copyright-sub">Engineered for Lossless In-Browser Optimization</span>
+            <span class="copyright-sep">•</span>
+            <a href="/admin" target="_blank" style="color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">
+              <i class="fi fi-rr-shield-check" style="font-size: 0.75rem;"></i> Admin
+            </a>
+          </div>
+
+          <div class="footer-bottom-right">
+            <button id="pwaInstallBtn" class="btn-footer-install" onclick="triggerPwaInstall()" title="Install Compress-X Desktop App">
+              <i class="fi fi-sr-download"></i>
+              <span>Install App</span>
+            </button>
+            <div class="footer-status-pill">
+              <span class="dot-green"></span>
+              <span>All Systems Normal</span>
+            </div>
+            <button class="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">
+              <span>Back to Top</span>
+              <i class="fi fi-rr-arrow-up"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       5. MODALS (BEFORE/AFTER SLIDER, PRIVACY)
+       ========================================================================= -->
+
+  <!-- Interactive Comparison Modal -->
+  <div class="modal-wrapper" id="compareModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div class="head-left">
+          <i class="fi fi-sr-columns-3 modal-icon-purp"></i>
+          <div>
+            <h3 id="compModalTitle">Visual Inspection</h3>
+            <p>Slide the divider left & right to compare image clarity</p>
+          </div>
+        </div>
+        <button class="btn-modal-close" id="btnCloseCompare"><i class="fi fi-br-cross"></i></button>
+      </div>
+
+      <div class="modal-content">
+        <div class="comparison-stage" id="compContainer">
+          <img id="compOrigImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E" alt="Original" class="img-layer img-orig">
+          <span class="layer-pill pill-orig">Original: <span id="compOrigSizeText">0 KB</span></span>
+
+          <div class="img-overlay-clip" id="compOverlayClip">
+            <img id="compCompImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E" alt="Compressed" class="img-layer img-comp">
+            <span class="layer-pill pill-comp">Optimized: <span id="compCompSizeText">0 KB</span></span>
+          </div>
+
+          <div class="divider-handle" id="compDividerHandle">
+            <div class="divider-bar"></div>
+            <div class="divider-thumb"><i class="fi fi-sr-arrows-h"></i></div>
+            <div class="divider-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <div class="modal-chips">
+          <span class="chip-item" id="compSavingsChip">78% Smaller</span>
+          <span class="chip-item" id="compDimsChip">1920 × 1080 px</span>
+        </div>
+        <button class="btn-modal-download" id="btnModalDownloadImage">
+          <i class="fi fi-sr-download"></i> Download Optimized File
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-wrapper" id="privacyModal" style="display: none;">
+    <div class="modal-box modal-box-md">
+      <div class="modal-head">
+        <div class="head-left">
+          <i class="fi fi-sr-shield-check modal-icon-purp"></i>
+          <div>
+            <h3>Privacy Policy</h3>
+            <p>100% Privacy by Design</p>
+          </div>
+        </div>
+        <button class="btn-modal-close" id="btnClosePrivacy"><i class="fi fi-br-cross"></i></button>
+      </div>
+      <div class="modal-content legal-content">
+        <h4>1. Zero Cloud Uploads</h4>
+        <p>OptiCore processes all images and PDF documents directly inside your browser memory using HTML5 Canvas and JavaScript PDF engines. None of your files ever touch a remote server.</p>
+
+        <h4>2. No Tracking of Document Data</h4>
+        <p>Because processing is entirely local, we have no access to your confidential documents, metadata, camera EXIF info, or file names.</p>
+
+        <h4>3. Free & Open</h4>
+        <p>No cookies are used for profiling and no account signup is required.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       6. USER AUTH MODAL (SIGN IN / SIGN UP TABS)
+       ========================================================================= -->
+  <div class="modal-wrapper" id="authModal" style="display: none;">
+    <div class="modal-box modal-box-auth">
+      
+      <div class="auth-modal-top">
+        <div class="auth-logo-badge">
+          <i class="fi fi-sr-compress-alt"></i>
+        </div>
+        <button class="btn-modal-close auth-close-btn" onclick="closeAuthModal()">
+          <i class="fi fi-br-cross"></i>
+        </button>
+      </div>
+
+      <div class="auth-modal-header-text">
+        <h3 id="authModalTitle">Welcome to Compress-X</h3>
+        <p id="authModalSubtitle">Sign in to manage your Pro subscription and studio preferences.</p>
+      </div>
+
+      <!-- Auth Switcher Tabs -->
+      <div class="auth-tabs-bar">
+        <button type="button" class="auth-tab-btn active" id="tabBtnSignIn" onclick="switchAuthTab('signin')">
+          <i class="fi fi-rr-sign-in-alt"></i>
+          <span>Sign In</span>
+        </button>
+        <button type="button" class="auth-tab-btn" id="tabBtnSignUp" onclick="switchAuthTab('signup')">
+          <i class="fi fi-rr-user-add"></i>
+          <span>Create Account</span>
+        </button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="formSignIn" class="auth-form-panel" onsubmit="handleUserSignIn(event)">
+        <div class="auth-input-group">
+          <label class="auth-label">Email Address</label>
+          <div class="auth-input-wrap">
+            <i class="fi fi-rr-envelope auth-field-ic"></i>
+            <input type="email" id="signInEmail" required placeholder="you@domain.com" class="auth-input-field" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <div class="auth-label-row">
+            <label class="auth-label">Password</label>
+            <a href="javascript:void(0)" class="auth-forgot-link" onclick="showToast('Password reset link sent to registered email.', 'info')">Forgot?</a>
+          </div>
+          <div class="auth-input-wrap">
+            <i class="fi fi-rr-lock auth-field-ic"></i>
+            <input type="password" id="signInPassword" required placeholder="••••••••" class="auth-input-field" autocomplete="current-password">
+            <button type="button" class="btn-auth-pw-toggle" onclick="toggleInputPassword('signInPassword', this)">
+              <i class="fi fi-rr-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSignInSubmit" class="btn-auth-submit">
+          <i class="fi fi-rr-sign-in-alt"></i>
+          <span>Sign In to Account</span>
+        </button>
+
+        <div class="auth-demo-shortcut">
+          <span>Need a quick test?</span>
+          <button type="button" class="btn-demo-fill-auth" onclick="autoFillDemoUser()">
+            Fill Demo Account
+          </button>
+        </div>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="formSignUp" class="auth-form-panel" style="display: none;" onsubmit="handleUserSignUp(event)">
+        <div class="auth-input-group">
+          <label class="auth-label">Full Name</label>
+          <div class="auth-input-wrap">
+            <i class="fi fi-rr-user auth-field-ic"></i>
+            <input type="text" id="signUpName" required placeholder="Hamza Ahmed" class="auth-input-field" autocomplete="name">
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-label">Work or Personal Email</label>
+          <div class="auth-input-wrap">
+            <i class="fi fi-rr-envelope auth-field-ic"></i>
+            <input type="email" id="signUpEmail" required placeholder="name@company.com" class="auth-input-field" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-label">Create Password (min. 6 characters)</label>
+          <div class="auth-input-wrap">
+            <i class="fi fi-rr-lock auth-field-ic"></i>
+            <input type="password" id="signUpPassword" required minlength="6" placeholder="••••••••" class="auth-input-field" autocomplete="new-password">
+            <button type="button" class="btn-auth-pw-toggle" onclick="toggleInputPassword('signUpPassword', this)">
+              <i class="fi fi-rr-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-terms-note">
+          By signing up, you agree to our <a href="javascript:void(0)" onclick="openPrivacyModal()">Terms of Service</a> & Privacy Policy.
+        </div>
+
+        <button type="submit" id="btnSignUpSubmit" class="btn-auth-submit">
+          <i class="fi fi-rr-check"></i>
+          <span>Create Free Account</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       7. PROFESSIONAL BANK CARD (VISA & MASTERCARD) PKR CHECKOUT MODAL
+       ========================================================================= -->
+  <div class="modal-wrapper" id="checkoutModal" style="display: none;">
+    <div class="modal-box modal-box-checkout">
+      
+      <!-- Checkout Header -->
+      <div class="checkout-modal-head">
+        <div class="checkout-brand-group">
+          <div class="checkout-logo-pill">
+            <i class="fi fi-sr-credit-card"></i>
+          </div>
+          <div>
+            <h3 class="checkout-heading">Bank Card Checkout</h3>
+            <p class="checkout-sub">100% Encrypted Payment in Pakistani Rupees (PKR)</p>
+          </div>
+        </div>
+        <button class="btn-modal-close" onclick="closeCheckoutModal()">
+          <i class="fi fi-br-cross"></i>
+        </button>
+      </div>
+
+      <!-- Checkout Content / States -->
+      <div class="checkout-modal-body">
+        
+        <!-- STEP 1: PAYMENT FORM (DEFAULT) -->
+        <div id="checkoutFormStep">
+          
+          <!-- Plan Summary Banner -->
+          <div class="checkout-order-summary-box">
+            <div class="summary-plan-left">
+              <span class="plan-pill-tag" id="coPlanTag">PRO STUDIO</span>
+              <h4 id="coPlanTitle">Compress-X Pro Studio</h4>
+              <p id="coPlanCycleText">Monthly auto-renewing subscription</p>
+            </div>
+            <div class="summary-plan-right">
+              <span class="co-currency-label">TOTAL (PKR)</span>
+              <div class="co-price-value">
+                <span class="co-rs">Rs.</span>
+                <span class="co-number" id="coTotalAmount">2,499</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accepted Cards Banner -->
+          <div class="accepted-cards-row">
+            <span class="accepted-cards-label">Accepted Cards:</span>
+            <div class="card-logos-indicator">
+              <div class="brand-pill-logo brand-visa" id="logoIndicatorVisa">
+                <span>VISA</span>
+              </div>
+              <div class="brand-pill-logo brand-mastercard" id="logoIndicatorMastercard">
+                <span>Mastercard</span>
+              </div>
+            </div>
+            <span class="detected-badge" id="detectedBrandBadge">Enter Card</span>
+          </div>
+
+          <!-- Card Payment Form -->
+          <form id="cardPaymentForm" onsubmit="handleCardSubscription(event)">
+            
+            <div class="co-field-group">
+              <label class="co-label">Cardholder Full Name</label>
+              <div class="co-input-wrap">
+                <i class="fi fi-rr-user co-field-ic"></i>
+                <input type="text" id="coCardName" required placeholder="Name as printed on card" class="co-input">
+              </div>
+            </div>
+
+            <div class="co-field-group">
+              <label class="co-label">Debit / Credit Card Number</label>
+              <div class="co-input-wrap">
+                <i class="fi fi-rr-credit-card co-field-ic" id="coCardIcon"></i>
+                <input type="text" id="coCardNumber" required maxlength="19" placeholder="0000 0000 0000 0000" class="co-input card-mono" oninput="formatCardNumberInput(this)">
+              </div>
+            </div>
+
+            <div class="co-two-col-grid">
+              <div class="co-field-group">
+                <label class="co-label">Expiry Date</label>
+                <div class="co-input-wrap">
+                  <i class="fi fi-rr-calendar co-field-ic"></i>
+                  <input type="text" id="coCardExpiry" required maxlength="5" placeholder="MM/YY" class="co-input card-mono" oninput="formatCardExpiryInput(this)">
+                </div>
+              </div>
+
+              <div class="co-field-group">
+                <div class="co-label-row">
+                  <label class="co-label">CVV / CVC</label>
+                  <span class="co-hint" title="3 digits on back of card">What is this?</span>
+                </div>
+                <div class="co-input-wrap">
+                  <i class="fi fi-rr-shield-check co-field-ic"></i>
+                  <input type="password" id="coCardCvv" required maxlength="4" placeholder="123" class="co-input card-mono" oninput="formatCardCvvInput(this)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Email for receipt if guest -->
+            <div class="co-field-group" id="coGuestEmailGroup" style="display: none;">
+              <label class="co-label">Email for Tax Invoice & Receipt</label>
+              <div class="co-input-wrap">
+                <i class="fi fi-rr-envelope co-field-ic"></i>
+                <input type="email" id="coGuestEmail" placeholder="your-email@domain.com" class="co-input">
+              </div>
+            </div>
+
+            <div class="co-security-guarantee-strip">
+              <i class="fi fi-rr-lock" style="color: var(--brand-blue);"></i>
+              <span>PCI-DSS Level 1 Secure Bank Processing with 3D Secure 2.0 OTP Authentication.</span>
+            </div>
+
+            <button type="submit" id="btnPayCardSubmit" class="btn-co-pay-submit">
+              <i class="fi fi-rr-shield-check"></i>
+              <span id="btnPayCardLabel">Pay Rs. 2,499 PKR & Activate Instantly</span>
+            </button>
+          </form>
+
+        </div>
+
+        <!-- STEP 2: PROCESSING 3D SECURE SCREEN -->
+        <div id="checkoutProcessingStep" style="display: none; text-align: center; padding: 2.5rem 1rem;">
+          <div class="co-processing-spinner-box">
+            <div class="co-spinner-ring"></div>
+            <div class="co-bank-shield-ic"><i class="fi fi-sr-shield-check"></i></div>
+          </div>
+          <h4 class="co-proc-title">Contacting Bank 3D Secure Gateway...</h4>
+          <p class="co-proc-desc" id="coProcStatusText">Verifying card authorization with issuing bank in Pakistan.</p>
+          <div class="co-proc-pill">
+            <span class="co-proc-dot"></span>
+            <span>Zero-Fee PKR Clearance</span>
+          </div>
+        </div>
+
+        <!-- STEP 3: SUCCESS INVOICE & RECEIPT SCREEN -->
+        <div id="checkoutSuccessStep" style="display: none;">
+          <div class="co-success-hero">
+            <div class="co-success-icon-wrap">
+              <i class="fi fi-sr-check"></i>
+            </div>
+            <h3>Subscription Activated!</h3>
+            <p>Your payment has been cleared and your Pro features are now online.</p>
+          </div>
+
+          <!-- Digital Invoice Receipt Card -->
+          <div class="co-receipt-card" id="receiptPrintArea">
+            <div class="receipt-header-row">
+              <div class="receipt-brand-name">
+                <strong>Compress-X Studio</strong>
+                <span>Official Payment Receipt</span>
+              </div>
+              <span class="receipt-status-pill">PAID IN FULL</span>
+            </div>
+
+            <div class="receipt-details-table">
+              <div class="receipt-row">
+                <span class="rc-label">Transaction ID:</span>
+                <strong class="rc-val mono" id="rcTxnId">TXN-PKR-000000</strong>
+              </div>
+              <div class="receipt-row">
+                <span class="rc-label">Invoice Reference:</span>
+                <span class="rc-val mono" id="rcInvoiceNo">INV-PKR-2026-0000</span>
+              </div>
+              <div class="receipt-row">
+                <span class="rc-label">Subscription Plan:</span>
+                <strong class="rc-val" id="rcPlanName">Pro Studio</strong>
+              </div>
+              <div class="receipt-row">
+                <span class="rc-label">Billed Amount:</span>
+                <strong class="rc-val text-emerald" id="rcAmount">Rs. 2,499 PKR</strong>
+              </div>
+              <div class="receipt-row">
+                <span class="rc-label">Payment Method:</span>
+                <span class="rc-val" id="rcPaymentMethod">Mastercard •••• 4242</span>
+              </div>
+              <div class="receipt-row">
+                <span class="rc-label">Next Renewal Date:</span>
+                <span class="rc-val" id="rcRenewalDate">--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="co-success-actions">
+            <button type="button" class="btn-action-ghost" onclick="printReceipt()">
+              <i class="fi fi-rr-print"></i>
+              <span>Print Tax Receipt</span>
+            </button>
+            <button type="button" class="btn-plan-primary" onclick="closeCheckoutModal(); scrollToSection('tools-suite');">
+              <i class="fi fi-sr-sparkles"></i>
+              <span>Launch Pro Studio</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       8. USER ACTIVE SUBSCRIPTION MANAGEMENT MODAL
+       ========================================================================= -->
+  <div class="modal-wrapper" id="userSubModal" style="display: none;">
+    <div class="modal-box modal-box-sub">
+      <div class="modal-head">
+        <div class="head-left">
+          <i class="fi fi-sr-badge-percent modal-icon-purp"></i>
+          <div>
+            <h3>My Subscription</h3>
+            <p>Manage your Compress-X billing & license tier</p>
+          </div>
+        </div>
+        <button class="btn-modal-close" onclick="closeUserSubModal()"><i class="fi fi-br-cross"></i></button>
+      </div>
+
+      <div class="modal-content" style="padding: 1.5rem;">
+        <div class="sub-status-card" id="userSubCard">
+          <div class="sub-status-top">
+            <div>
+              <span class="sub-status-pill" id="userSubStatusBadge">ACTIVE</span>
+              <h4 id="userSubPlanTitle">Pro Studio Plan</h4>
+            </div>
+            <div class="sub-status-price" id="userSubPrice">Rs. 2,499 / mo</div>
+          </div>
+          <p class="sub-status-desc" id="userSubDesc">You have unlimited access to high-priority workers, AI upscaling, and format conversion.</p>
+          <div class="sub-meta-strip">
+            <div>
+              <span class="sub-meta-lbl">Card on file:</span>
+              <strong id="userSubCardInfo">Mastercard •••• 4242</strong>
+            </div>
+            <div>
+              <span class="sub-meta-lbl">Next Renewal:</span>
+              <strong id="userSubRenewal">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-modal-actions-row">
+          <button type="button" class="btn-action-ghost text-danger" id="btnCancelSub" onclick="cancelUserSubscription()">
+            <i class="fi fi-rr-cross-circle"></i>
+            <span>Cancel Subscription</span>
+          </button>
+          <button type="button" class="btn-plan-primary" onclick="closeUserSubModal(); scrollToSection('pricing');">
+            <i class="fi fi-rr-arrows-repeat"></i>
+            <span>Change Plan</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div class="toast-box" id="toastBox"></div>
+
+  <!-- Application JS Engine -->
+  <script src="./app.js?v=4.0"></script>
+</body>
+</html>

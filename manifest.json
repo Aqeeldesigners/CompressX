@@ -1,0 +1,41 @@
+{
+  "name": "Compress-X Studio — Next-Gen Media Optimizer",
+  "short_name": "Compress-X",
+  "description": "High-performance, 100% in-browser Image Compressor, Next-Gen Format Converter (WebP, AVIF, ICO), and PDF Compressor.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0052fe",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Image Compressor",
+      "url": "./index.html#tools-suite",
+      "description": "Compress JPG, PNG, WebP with precision"
+    },
+    {
+      "name": "Format Converter",
+      "url": "./index.html#tools-suite",
+      "description": "Convert images to WebP, AVIF, ICO"
+    },
+    {
+      "name": "PDF Compressor",
+      "url": "./index.html#tools-suite",
+      "description": "Shrink PDF document size privately"
+    }
+  ]
+}

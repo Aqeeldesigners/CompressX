@@ -1,0 +1,26 @@
+{
+  "name": "compress-x-studio",
+  "version": "1.0.0",
+  "description": "Compress-X Studio — Next-Gen Media Optimizer & Lightweight Backend Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "image-compressor",
+    "pdf-compressor",
+    "image-converter",
+    "webp",
+    "canvas",
+    "privacy-first"
+  ],
+  "author": "Compress-X Team",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.4",
+    "express": "^4.21.2"
+  }
+}

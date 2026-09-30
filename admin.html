@@ -1,0 +1,2833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compress-X Studio — Admin Control Center</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Flaticon UI Icons -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230052fe'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <style>
+    /* ==========================================================================
+       Compress-X Studio — Admin Light SaaS Theme
+       Brand: Electric Royal Blue (#0052fe) & Radiant Cyan (#00d2ff)
+       ========================================================================== */
+    :root {
+      --brand-blue: #0052fe;
+      --brand-blue-hover: #0045dc;
+      --brand-cyan: #00d2ff;
+      --brand-gradient: linear-gradient(135deg, #0052fe 0%, #0088ff 50%, #00d2ff 100%);
+      --brand-gradient-soft: linear-gradient(135deg, rgba(0, 82, 254, 0.08) 0%, rgba(0, 210, 255, 0.08) 100%);
+      
+      --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-muted: #e2e8f0;
+      
+      --text-heading: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      
+      --border-light: #e2e8f0;
+      --border-card: #e5eaf2;
+      --border-focus: #0052fe;
+      
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+      
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
+      
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 18px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.08);
+      --shadow-brand: 0 8px 24px rgba(0, 82, 254, 0.22);
+      
+      --sidebar-width: 270px;
+      --sidebar-collapsed: 80px;
+      --header-height: 70px;
+      
+      --font-display: 'Outfit', -apple-system, sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-body);
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 0.925rem;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       LOGIN VIEW (HIGH-END MODERN SAAS LIGHT EXPERIENCE)
+       ========================================================================== */
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+      background: radial-gradient(circle at 10% 10%, rgba(0, 82, 254, 0.06) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.07) 0%, transparent 45%),
+                  var(--bg-body);
+    }
+
+    .login-card-container {
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .login-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 2.75rem 2.5rem;
+      box-shadow: var(--shadow-lg), 0 20px 40px -15px rgba(0, 82, 254, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card-strip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--brand-gradient);
+    }
+
+    .login-brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo-box {
+      width: 56px;
+      height: 56px;
+      background: var(--brand-gradient);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.6rem;
+      box-shadow: var(--shadow-brand);
+      margin-bottom: 1.25rem;
+    }
+
+    .login-brand-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .login-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: var(--brand-gradient-soft);
+      color: var(--brand-blue);
+      border: 1px solid rgba(0, 82, 254, 0.2);
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-top: 0.5rem;
+    }
+
+    .login-brand-header p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.35rem;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      margin-bottom: 0.45rem;
+    }
+
+    .input-field-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 1rem;
+      color: var(--text-subtle);
+      font-size: 1.05rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .login-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-light);
+      border-radius: 12px;
+      padding: 0.8rem 1rem 0.8rem 2.75rem;
+      font-size: 0.925rem;
+      color: var(--text-heading);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3.5px rgba(0, 82, 254, 0.12);
+    }
+
+    .login-input:focus + .input-icon-left,
+    .input-field-wrap:focus-within .input-icon-left {
+      color: var(--brand-blue);
+    }
+
+    .btn-toggle-pw {
+      position: absolute;
+      right: 0.85rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+
+    .btn-toggle-pw:hover {
+      color: var(--text-heading);
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      background: var(--brand-gradient);
+      color: #fff;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-brand);
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+    }
+
+    .btn-login-submit:hover {
+      box-shadow: 0 10px 28px rgba(0, 82, 254, 0.35);
+      transform: translateY(-1.5px);
+    }
+
+    .btn-login-submit:active {
+      transform: translateY(0);
+    }
+
+    .login-demo-helper {
+      margin-top: 1.5rem;
+      background: var(--bg-subtle);
+      border: 1px dashed var(--border-card);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .demo-info {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .demo-info strong {
+      color: var(--text-heading);
+      font-family: var(--font-mono);
+    }
+
+    .btn-quick-fill {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--brand-blue);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .btn-quick-fill:hover {
+      background: var(--brand-blue);
+      color: #fff;
+      border-color: var(--brand-blue);
+    }
+
+    .login-footer-copy {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .login-footer-copy a {
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       ADMIN APP SHELL (SIDEBAR + MAIN CONTENT)
+       ========================================================================== */
+    .admin-app {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg-body);
+    }
+
+    /* Sidebar Navigation */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-card);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .admin-sidebar.collapsed {
+      width: var(--sidebar-collapsed);
+    }
+
+    .sidebar-header {
+      height: var(--header-height);
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-heading);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: var(--brand-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 14px rgba(0, 82, 254, 0.25);
+    }
+
+    .brand-text-wrap {
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-heading);
+    }
+
+    .brand-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .admin-sidebar.collapsed .brand-text-wrap {
+      opacity: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    /* Sidebar Navigation Links */
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.25rem 0.85rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-subtle);
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.5rem;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .admin-sidebar.collapsed .nav-group-label {
+      opacity: 0;
+      display: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 0.95rem;
+      border-radius: 12px;
+      color: var(--text-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .nav-item i {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      min-width: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.18s;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-subtle);
+      color: var(--brand-blue);
+    }
+
+    .nav-item:hover i {
+      color: var(--brand-blue);
+    }
+
+    .nav-item.active {
+      background: var(--brand-gradient-soft);
+      color: var(--brand-blue);
+      border-color: rgba(0, 82, 254, 0.15);
+      font-weight: 700;
+    }
+
+    .nav-item.active i {
+      color: var(--brand-blue);
+    }
+
+    .nav-item-text {
+      flex: 1;
+      transition: opacity 0.2s;
+    }
+
+    .nav-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      background: var(--bg-muted);
+      color: var(--text-muted);
+    }
+
+    .nav-item.active .nav-badge {
+      background: var(--brand-blue);
+      color: #fff;
+    }
+
+    .admin-sidebar.collapsed .nav-item-text,
+    .admin-sidebar.collapsed .nav-badge {
+      opacity: 0;
+      display: none;
+    }
+
+    .admin-sidebar.collapsed .nav-item {
+      justify-content: center;
+      padding: 0.85rem 0;
+    }
+
+    /* Sidebar Footer Profile / Quick Actions */
+    .sidebar-footer {
+      padding: 1rem 0.85rem;
+      border-top: 1px solid var(--border-light);
+      background: #fafcff;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .user-profile-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem;
+      border-radius: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .user-avatar-bubble {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      border-radius: 10px;
+      background: var(--brand-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .user-info-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .user-name-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .user-role-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .admin-sidebar.collapsed .user-info-text {
+      display: none;
+    }
+
+    .btn-sidebar-collapse {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      color: var(--text-muted);
+      border-radius: 10px;
+      padding: 0.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-sidebar-collapse:hover {
+      background: var(--bg-subtle);
+      color: var(--text-heading);
+      border-color: var(--border-card);
+    }
+
+    .admin-sidebar.collapsed .btn-sidebar-collapse span {
+      display: none;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT AREA & TOPBAR
+       ========================================================================== */
+    .admin-main-wrap {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .admin-sidebar.collapsed ~ .admin-main-wrap {
+      margin-left: var(--sidebar-collapsed);
+    }
+
+    /* Top Navigation Bar */
+    .admin-topbar {
+      height: var(--header-height);
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-card);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .btn-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      color: var(--text-heading);
+      cursor: pointer;
+    }
+
+    .topbar-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .topbar-breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .topbar-breadcrumb a:hover {
+      color: var(--brand-blue);
+    }
+
+    .topbar-breadcrumb .crumb-active {
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .server-health-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .live-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+      animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    .btn-topbar-action {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      color: var(--text-body);
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-topbar-action:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-card);
+      color: var(--brand-blue);
+    }
+
+    .btn-topbar-danger {
+      color: var(--danger);
+      border-color: var(--danger-border);
+      background: var(--danger-bg);
+    }
+
+    .btn-topbar-danger:hover {
+      background: #fee2e2;
+      border-color: var(--danger);
+      color: #dc2626;
+    }
+
+    /* Content Area */
+    .admin-content-area {
+      padding: 2rem;
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header Welcome Strip */
+    .page-title-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-title-block h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.6px;
+    }
+
+    .page-title-block p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    /* ==========================================================================
+       KPI STATS GRID (WHITE SAAS CARDS)
+       ========================================================================== */
+    .kpi-row-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .white-kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 18px;
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .white-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+
+    .kpi-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon-pill {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .kpi-icon-blue { background: #eff6ff; color: var(--brand-blue); }
+    .kpi-icon-green { background: #ecfdf5; color: var(--success); }
+    .kpi-icon-amber { background: #fffbeb; color: var(--warning); }
+    .kpi-icon-purple { background: #f5f3ff; color: #7c3aed; }
+
+    .kpi-figure {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    .kpi-trend {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* ==========================================================================
+       TAB SECTIONS & WHITE DATA TABLES
+       ========================================================================== */
+    .tab-section-block {
+      display: none;
+      animation: tabFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tab-section-block.active {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .white-table-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .table-topbar-controls {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: #ffffff;
+    }
+
+    .search-box-pill {
+      position: relative;
+      min-width: 280px;
+    }
+
+    .search-box-pill i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subtle);
+      font-size: 0.95rem;
+    }
+
+    .search-box-pill input {
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 0.55rem 1rem 0.55rem 2.5rem;
+      font-size: 0.88rem;
+      color: var(--text-heading);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box-pill input:focus {
+      background: #ffffff;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(0, 82, 254, 0.1);
+    }
+
+    .table-filters-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .custom-select {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-body);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .custom-select:focus {
+      border-color: var(--brand-blue);
+    }
+
+    .btn-export-csv {
+      background: #ecfdf5;
+      border: 1px solid var(--success-border);
+      color: #065f46;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-export-csv:hover {
+      background: #d1fae5;
+      border-color: var(--success);
+      color: #047857;
+    }
+
+    /* Table Component */
+    .table-responsive-box {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table.saas-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table.saas-table th {
+      background: #f8fafc;
+      padding: 0.95rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+
+    table.saas-table td {
+      padding: 1.15rem 1.5rem;
+      font-size: 0.88rem;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+      color: var(--text-body);
+    }
+
+    table.saas-table tbody tr {
+      transition: background 0.12s ease;
+    }
+
+    table.saas-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .ticket-mono-tag {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--brand-blue);
+      background: #eff6ff;
+      border: 1px solid rgba(0, 82, 254, 0.2);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .sender-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sender-avatar-initials {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      color: var(--brand-blue);
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sender-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sender-name-text {
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .sender-email-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Status Badges */
+    .status-badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+    }
+
+    .badge-chip-open {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: #b45309;
+    }
+
+    .badge-chip-progress {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .badge-chip-resolved {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: #065f46;
+    }
+
+    /* Action Buttons in Row */
+    .row-actions-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.45rem;
+    }
+
+    .btn-row-action {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .btn-row-action:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-card);
+      color: var(--text-heading);
+    }
+
+    .btn-row-action.view:hover {
+      background: #eff6ff;
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+    }
+
+    .btn-row-action.del:hover {
+      background: #fee2e2;
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* Empty State */
+    .empty-state-card {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      color: var(--text-subtle);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 0.35rem;
+    }
+
+    /* ==========================================================================
+       TELEMETRY & SYSTEM GAUGES (TAB 3)
+       ========================================================================== */
+    .telemetry-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .telemetry-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 18px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .telemetry-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .telem-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.88rem;
+    }
+
+    .telem-stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .telem-item-label {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .telem-item-val {
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-heading);
+    }
+
+    /* ==========================================================================
+       MODAL STYLES (WHITE SAAS CLEAN)
+       ========================================================================== */
+    .modal-backdrop-light {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop-light.active {
+      display: flex;
+      animation: modalFade 0.2s ease;
+    }
+
+    .modal-card-box {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg), 0 25px 60px -15px rgba(0, 0, 0, 0.2);
+      max-width: 620px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .modal-card-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafcff;
+    }
+
+    .modal-card-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-modal-close-round {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-modal-close-round:hover {
+      background: var(--bg-muted);
+      color: var(--text-heading);
+    }
+
+    .modal-card-body {
+      padding: 1.75rem;
+    }
+
+    .modal-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-meta-cell label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .modal-meta-cell span {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .modal-subject-line {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 0.65rem;
+    }
+
+    .modal-message-bubble {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-body);
+      white-space: pre-wrap;
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-card-footer {
+      padding: 1.15rem 1.75rem;
+      border-top: 1px solid var(--border-light);
+      background: #fafcff;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    /* Toast Notification Light */
+    .toast-stack-light {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .toast-item-light {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.9rem 1.25rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      animation: toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      min-width: 290px;
+    }
+
+    @keyframes toastSlide {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-item-light.toast-success { border-left: 4px solid var(--success); }
+    .toast-item-light.toast-error { border-left: 4px solid var(--danger); }
+    .toast-item-light.toast-info { border-left: 4px solid var(--brand-blue); }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .admin-sidebar {
+        transform: translateX(-100%);
+      }
+      .admin-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .admin-main-wrap {
+        margin-left: 0 !important;
+      }
+      .btn-mobile-toggle {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .admin-topbar { padding: 0 1rem; }
+      .admin-content-area { padding: 1rem; }
+      .table-topbar-controls { flex-direction: column; align-items: stretch; }
+      .search-box-pill { min-width: 100%; }
+      .modal-details-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. LOGIN VIEW (HIGH-END MODERN SAAS LIGHT EXPERIENCE)
+       ========================================================================= -->
+  <div id="loginView" class="login-wrapper">
+    <div class="login-card-container">
+      <div class="login-card">
+        <div class="login-card-strip"></div>
+        
+        <div class="login-brand-header">
+          <div class="login-logo-box">
+            <i class="fi fi-sr-compress-alt"></i>
+          </div>
+          <h1>Compress-X</h1>
+          <span class="login-badge"><i class="fi fi-sr-shield-check"></i> Admin Control Suite</span>
+          <p>Sign in with administrative credentials to access support inquiries, subscribers, and engine telemetry.</p>
+        </div>
+
+        <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label class="form-label">
+              <span>Admin Username</span>
+            </label>
+            <div class="input-field-wrap">
+              <i class="fi fi-rr-user input-icon-left"></i>
+              <input type="text" id="loginUsername" class="login-input" placeholder="admin" required autofocus autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Password</span>
+            </label>
+            <div class="input-field-wrap">
+              <i class="fi fi-rr-lock input-icon-left"></i>
+              <input type="password" id="loginPassword" class="login-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+                <i class="fi fi-rr-eye" id="pwToggleIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn-login-submit">
+            <i class="fi fi-rr-sign-in-alt"></i>
+            <span>Authenticate Session</span>
+          </button>
+        </form>
+
+        <div class="login-demo-helper">
+          <div class="demo-info">
+            Default credentials: <strong>admin</strong> / <strong>admin123</strong>
+          </div>
+          <button type="button" class="btn-quick-fill" onclick="quickFillCredentials()">
+            Auto Fill
+          </button>
+        </div>
+
+        <div class="login-footer-copy">
+          <a href="/" target="_blank"><i class="fi fi-rr-arrow-up-right-from-square"></i> Open Public Compress-X Studio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. ADMIN APP SHELL (SIDEBAR COLLAPSIBLE + TOPBAR + CONTENT)
+       ========================================================================= -->
+  <div id="adminApp" class="admin-app" style="display: none;">
+    
+    <!-- Collapsible Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+      
+      <!-- Sidebar Brand Header -->
+      <div class="sidebar-header">
+        <a href="/admin" class="sidebar-brand">
+          <div class="brand-icon">
+            <i class="fi fi-sr-compress-alt"></i>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-name">Compress-X</span>
+            <span class="brand-tag">Studio Admin</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="sidebar-nav">
+        <span class="nav-group-label">Core Overview</span>
+        
+        <div class="nav-item active" data-tab="tabOverview" onclick="navigateTab('tabOverview', this)">
+          <i class="fi fi-rr-apps"></i>
+          <span class="nav-item-text">Dashboard</span>
+        </div>
+
+        <span class="nav-group-label">Operations</span>
+
+        <div class="nav-item" data-tab="tabTickets" onclick="navigateTab('tabTickets', this)">
+          <i class="fi fi-rr-inbox-in"></i>
+          <span class="nav-item-text">Support Inquiries</span>
+          <span class="nav-badge" id="sidebarBadgeTickets">0</span>
+        </div>
+
+        <div class="nav-item" data-tab="tabSubscribers" onclick="navigateTab('tabSubscribers', this)">
+          <i class="fi fi-rr-envelope-open-text"></i>
+          <span class="nav-item-text">Newsletter Audience</span>
+          <span class="nav-badge" id="sidebarBadgeSubscribers">0</span>
+        </div>
+
+        <div class="nav-item" data-tab="tabSubscriptions" onclick="navigateTab('tabSubscriptions', this)">
+          <i class="fi fi-rr-credit-card"></i>
+          <span class="nav-item-text">Subscriptions & Users</span>
+          <span class="nav-badge" id="sidebarBadgeSubscriptions">0</span>
+        </div>
+
+        <span class="nav-group-label">Infrastructure</span>
+
+        <div class="nav-item" data-tab="tabTelemetry" onclick="navigateTab('tabTelemetry', this)">
+          <i class="fi fi-rr-server"></i>
+          <span class="nav-item-text">Engine Telemetry</span>
+        </div>
+
+        <div class="nav-item" data-tab="tabSettings" onclick="navigateTab('tabSettings', this)">
+          <i class="fi fi-rr-settings"></i>
+          <span class="nav-item-text">System & Storage</span>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="user-profile-strip">
+          <div class="user-avatar-bubble">AD</div>
+          <div class="user-info-text">
+            <span class="user-name-label">Administrator</span>
+            <span class="user-role-label">admin@compress-x.local</span>
+          </div>
+        </div>
+
+        <button class="btn-sidebar-collapse" onclick="toggleSidebarCollapse()" title="Toggle sidebar size">
+          <i class="fi fi-rr-sidebar" id="sidebarToggleIcon"></i>
+          <span>Collapse Sidebar</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-main-wrap">
+      
+      <!-- Topbar Header -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="btn-mobile-toggle" onclick="toggleMobileSidebar()">
+            <i class="fi fi-rr-menu-burger"></i>
+          </button>
+          
+          <div class="topbar-breadcrumb">
+            <a href="/admin">Compress-X</a>
+            <span>/</span>
+            <span class="crumb-active" id="currentBreadcrumb">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="server-health-chip">
+            <span class="live-pulse-dot"></span>
+            <span>Local Engine Operational</span>
+          </div>
+
+          <a href="/" target="_blank" class="btn-topbar-action" title="View Public Studio">
+            <i class="fi fi-rr-arrow-up-right-from-square"></i>
+            <span>Public Site</span>
+          </a>
+
+          <button class="btn-topbar-action" onclick="fetchAdminData(true)" title="Reload latest data">
+            <i class="fi fi-rr-refresh"></i>
+            <span>Refresh</span>
+          </button>
+
+          <button class="btn-topbar-action btn-topbar-danger" onclick="adminLogout()" title="Sign out">
+            <i class="fi fi-rr-sign-out-alt"></i>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <main class="admin-content-area">
+        
+        <!-- =========================================================================
+             TAB 1: DASHBOARD OVERVIEW
+             ========================================================================= -->
+        <section id="tabOverview" class="tab-section-block active">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>Executive Dashboard</h2>
+              <p>Real-time platform metrics, inquiry queues, and browser engine telemetry.</p>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards -->
+          <div class="kpi-row-grid">
+            
+            <div class="white-kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Images Processed</span>
+                <div class="kpi-icon-pill kpi-icon-blue">
+                  <i class="fi fi-rr-picture"></i>
+                </div>
+              </div>
+              <div class="kpi-figure" id="kpiOverviewOptimized">0</div>
+              <div class="kpi-trend">
+                <i class="fi fi-rr-check-circle" style="color: var(--success);"></i>
+                <span>100% In-Browser Privacy Preserved</span>
+              </div>
+            </div>
+
+            <div class="white-kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Bandwidth Saved</span>
+                <div class="kpi-icon-pill kpi-icon-green">
+                  <i class="fi fi-rr-cloud-download-alt"></i>
+                </div>
+              </div>
+              <div class="kpi-figure" id="kpiOverviewSaved">0 MB</div>
+              <div class="kpi-trend">
+                <i class="fi fi-rr-leaf" style="color: var(--success);"></i>
+                <span>Eco-friendly edge compression</span>
+              </div>
+            </div>
+
+            <div class="white-kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Customer Inquiries</span>
+                <div class="kpi-icon-pill kpi-icon-amber">
+                  <i class="fi fi-rr-envelope-open-text"></i>
+                </div>
+              </div>
+              <div class="kpi-figure" id="kpiOverviewInquiries">0</div>
+              <div class="kpi-trend" id="kpiOverviewInquiriesSub">
+                <i class="fi fi-rr-clock"></i>
+                <span>0 open pending tickets</span>
+              </div>
+            </div>
+
+            <div class="white-kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Newsletter Audience</span>
+                <div class="kpi-icon-pill kpi-icon-purple">
+                  <i class="fi fi-rr-users"></i>
+                </div>
+              </div>
+              <div class="kpi-figure" id="kpiOverviewSubscribers">0</div>
+              <div class="kpi-trend">
+                <i class="fi fi-rr-paper-plane" style="color: #7c3aed;"></i>
+                <span>Registered product recipients</span>
+              </div>
+            <div class="white-kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Revenue (PKR)</span>
+                <div class="kpi-icon-pill kpi-icon-green">
+                  <i class="fi fi-rr-coins"></i>
+                </div>
+              </div>
+              <div class="kpi-figure" id="kpiOverviewRevenue">Rs. 0</div>
+              <div class="kpi-trend">
+                <i class="fi fi-rr-check-circle" style="color: var(--success);"></i>
+                <span id="kpiOverviewPaidSubs">0 Active Pro Subscriptions</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Action Panels in Overview -->
+          <div class="telemetry-cards-grid">
+            
+            <!-- Recent Support Inquiries Preview -->
+            <div class="telemetry-box">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                <h3><i class="fi fi-rr-inbox-in" style="color: var(--brand-blue);"></i> Recent Inquiries</h3>
+                <button class="btn-topbar-action" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;" onclick="navigateTab('tabTickets', document.querySelector('[data-tab=\'tabTickets\']'))">
+                  View All
+                </button>
+              </div>
+              <div id="overviewTicketsList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- System Snapshot -->
+            <div class="telemetry-box">
+              <h3><i class="fi fi-rr-microchip" style="color: var(--brand-blue);"></i> System Architecture</h3>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-laptop"></i> Node Runtime</span>
+                <span class="telem-item-val" id="ovNodeVersion">Loading...</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-clock"></i> Server Uptime</span>
+                <span class="telem-item-val" id="ovUptime">Loading...</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-shield-check"></i> Media Server Cost</span>
+                <span class="telem-item-val" style="color: var(--success);">$0.00 / mo</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-database"></i> Database Engine</span>
+                <span class="telem-item-val" id="ovDbEngine">data/db.json</span>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =========================================================================
+             TAB 2: CUSTOMER SUPPORT INQUIRIES
+             ========================================================================= -->
+        <section id="tabTickets" class="tab-section-block">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>Customer Support Tickets</h2>
+              <p>Review customer feedback, enterprise requests, and reply via official email.</p>
+            </div>
+          </div>
+
+          <div class="white-table-card">
+            
+            <div class="table-topbar-controls">
+              <div class="search-box-pill">
+                <i class="fi fi-rr-search"></i>
+                <input type="text" id="ticketSearchInput" placeholder="Search by name, email, subject, or ticket ID..." oninput="filterTicketsTable()">
+              </div>
+
+              <div class="table-filters-flex">
+                <select id="ticketStatusFilter" class="custom-select" onchange="filterTicketsTable()">
+                  <option value="all">All Ticket Statuses</option>
+                  <option value="open">Open Only</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive-box">
+              <table class="saas-table">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Customer</th>
+                    <th>Subject</th>
+                    <th>Received</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+
+              <div id="ticketsEmptyState" class="empty-state-card" style="display: none;">
+                <div class="empty-state-icon"><i class="fi fi-rr-inbox"></i></div>
+                <h4>No Inquiries Found</h4>
+                <p>No customer messages matched your filter or search criteria.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =========================================================================
+             TAB 3: NEWSLETTER AUDIENCE
+             ========================================================================= -->
+        <section id="tabSubscribers" class="tab-section-block">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>Newsletter Subscribers</h2>
+              <p>Audience list subscribed for offline updates and new format algorithms.</p>
+            </div>
+
+            <button class="btn-export-csv" onclick="exportSubscribersCSV()">
+              <i class="fi fi-rr-file-download"></i>
+              <span>Export CSV (Excel / Sheets)</span>
+            </button>
+          </div>
+
+          <div class="white-table-card">
+            
+            <div class="table-topbar-controls">
+              <div class="search-box-pill">
+                <i class="fi fi-rr-search"></i>
+                <input type="text" id="subscriberSearchInput" placeholder="Search subscriber emails..." oninput="filterSubscribersTable()">
+              </div>
+
+              <div class="table-filters-flex">
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;" id="subscriberTotalCountLabel">
+                  Total: 0 Subscribers
+                </span>
+              </div>
+            </div>
+
+            <div class="table-responsive-box">
+              <table class="saas-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Subscriber Email</th>
+                    <th>Date Joined</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="subscribersTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+
+              <div id="subscribersEmptyState" class="empty-state-card" style="display: none;">
+                <div class="empty-state-icon"><i class="fi fi-rr-users"></i></div>
+                <h4>No Subscribers Yet</h4>
+                <p>Users who submit their email in the website footer will be listed here.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =========================================================================
+             TAB: SUBSCRIPTIONS & REGISTERED USERS (PKR BILLING)
+             ========================================================================= -->
+        <section id="tabSubscriptions" class="tab-section-block">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>Customer Subscriptions & Users</h2>
+              <p>Registered customer accounts, active Pro Studio plans, and Pakistani Rupee (PKR) card payments.</p>
+            </div>
+          </div>
+
+          <div class="white-table-card">
+            
+            <div class="table-topbar-controls">
+              <div class="search-box-pill">
+                <i class="fi fi-rr-search"></i>
+                <input type="text" id="subSearchInput" placeholder="Search customer, email, or invoice..." oninput="filterSubscriptionsTable()">
+              </div>
+
+              <div class="table-filters-flex">
+                <select id="subPlanFilter" class="custom-select" onchange="filterSubscriptionsTable()">
+                  <option value="all">All Plans</option>
+                  <option value="pro">Pro Studio Only</option>
+                  <option value="team">Team & API</option>
+                  <option value="free">Community Free</option>
+                </select>
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;" id="subTotalUsersCountLabel">
+                  0 Registered Users
+                </span>
+              </div>
+            </div>
+
+            <div class="table-responsive-box">
+              <table class="saas-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Plan Tier</th>
+                    <th>Billed (PKR)</th>
+                    <th>Cycle</th>
+                    <th>Payment Method</th>
+                    <th>Subscribed</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="subscriptionsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+
+              <div id="subscriptionsEmptyState" class="empty-state-card" style="display: none;">
+                <div class="empty-state-icon"><i class="fi fi-rr-credit-card"></i></div>
+                <h4>No Subscriptions Found</h4>
+                <p>Customer accounts and card subscriptions will appear here as users sign up or upgrade.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =========================================================================
+             TAB 4: SYSTEM TELEMETRY & HEALTH
+             ========================================================================= -->
+        <section id="tabTelemetry" class="tab-section-block">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>Engine Telemetry & System Health</h2>
+              <p>Real-time server metrics, memory allocation, and privacy architecture.</p>
+            </div>
+          </div>
+
+          <div class="telemetry-cards-grid">
+            
+            <div class="telemetry-box">
+              <h3><i class="fi fi-rr-server" style="color: var(--brand-blue);"></i> Node.js Runtime</h3>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-code-branch"></i> Node Version</span>
+                <span class="telem-item-val" id="telemNodeVersion">--</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-clock"></i> System Uptime</span>
+                <span class="telem-item-val" id="telemUptime">--</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-memory"></i> RAM Allocated (RSS)</span>
+                <span class="telem-item-val" id="telemRss">-- MB</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-database"></i> V8 Heap Memory</span>
+                <span class="telem-item-val" id="telemHeap">-- MB</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-laptop"></i> OS Platform</span>
+                <span class="telem-item-val" id="telemPlatform">--</span>
+              </div>
+            </div>
+
+            <div class="telemetry-box">
+              <h3><i class="fi fi-rr-shield-check" style="color: var(--success);"></i> Privacy & Compute Model</h3>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-microchip"></i> Media Processing Topology</span>
+                <span class="telem-item-val" style="color: var(--success);">100% In-Browser</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-cloud"></i> Server Media Storage</span>
+                <span class="telem-item-val" style="color: var(--success);">0 Bytes (Zero Storage)</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-lock"></i> GDPR / HIPAA Compliance</span>
+                <span class="telem-item-val" style="color: var(--success);">Native by Architecture</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-network"></i> Backend Role</span>
+                <span class="telem-item-val">Business & Telemetry</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-file-code"></i> Persistence Store</span>
+                <span class="telem-item-val" id="telemDbEngine">data/db.json</span>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =========================================================================
+             TAB 5: SYSTEM SETTINGS & PERSISTENCE
+             ========================================================================= -->
+        <section id="tabSettings" class="tab-section-block">
+          
+          <div class="page-title-strip">
+            <div class="page-title-block">
+              <h2>System Settings & Storage</h2>
+              <p>Manage data persistence, administrative security, and session preferences.</p>
+            </div>
+          </div>
+
+          <div class="telemetry-cards-grid">
+            
+            <div class="telemetry-box">
+              <h3><i class="fi fi-rr-database" style="color: var(--brand-blue);"></i> Persistence Management</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                All customer inquiries, newsletter subscribers, and lifetime optimization stats are securely stored in the local file <code>data/db.json</code>.
+              </p>
+              
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-file"></i> Database File</span>
+                <span class="telem-item-val">IMAGE COMPRESSER TOOL/data/db.json</span>
+              </div>
+
+              <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+                <button class="btn-topbar-action" onclick="fetchAdminData(true)">
+                  <i class="fi fi-rr-refresh"></i>
+                  <span>Verify Sync Status</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="telemetry-box">
+              <h3><i class="fi fi-rr-lock" style="color: var(--brand-blue);"></i> Security & Credentials</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                Administrative sessions use cryptographic random tokens with a 24-hour lifetime.
+              </p>
+
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-user-shield"></i> Current User</span>
+                <span class="telem-item-val">admin</span>
+              </div>
+              <div class="telem-stat-row">
+                <span class="telem-item-label"><i class="fi fi-rr-hourglass-end"></i> Token Lifetime</span>
+                <span class="telem-item-val">24 Hours</span>
+              </div>
+
+              <div style="margin-top: 1.25rem;">
+                <button class="btn-topbar-action btn-topbar-danger" onclick="adminLogout()">
+                  <i class="fi fi-rr-sign-out-alt"></i>
+                  <span>End Session & Logout</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================================
+       3. TICKET DETAIL MODAL (CLEAN LIGHT SAAS POPUP)
+       ========================================================================= -->
+  <div id="ticketModal" class="modal-backdrop-light" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-card-box">
+      
+      <div class="modal-card-header">
+        <h3>
+          <i class="fi fi-rr-envelope-open-text" style="color: var(--brand-blue);"></i>
+          <span>Customer Inquiry</span>
+        </h3>
+        <button class="btn-modal-close-round" onclick="closeTicketModal()">
+          <i class="fi fi-rr-cross-small"></i>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        
+        <div class="modal-details-grid">
+          <div class="modal-meta-cell">
+            <label>Ticket Reference</label>
+            <span class="ticket-mono-tag" id="modalTicketId">TK-000000</span>
+          </div>
+          <div class="modal-meta-cell">
+            <label>Timestamp</label>
+            <span id="modalTicketDate">--</span>
+          </div>
+          <div class="modal-meta-cell">
+            <label>Customer Name</label>
+            <span id="modalSenderName">--</span>
+          </div>
+          <div class="modal-meta-cell">
+            <label>Email Address</label>
+            <span id="modalSenderEmail" style="color: var(--brand-blue);">--</span>
+          </div>
+        </div>
+
+        <div class="modal-subject-line" id="modalSubject">Subject</div>
+        <div class="modal-message-bubble" id="modalMessage">Loading message...</div>
+
+      </div>
+
+      <div class="modal-card-footer">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <label for="modalStatusSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">
+            Update Status:
+          </label>
+          <select id="modalStatusSelect" class="custom-select" onchange="updateTicketStatusFromModal()">
+            <option value="open">Open</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+
+        <div>
+          <a id="modalReplyBtn" href="#" class="btn-login-submit" style="padding: 0.55rem 1.15rem; font-size: 0.85rem; text-decoration: none; margin: 0;">
+            <i class="fi fi-rr-paper-plane"></i>
+            <span>Reply via Email</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div id="toastContainer" class="toast-stack-light"></div>
+
+  <!-- =========================================================================
+       4. CLIENT JAVASCRIPT LOGIC
+       ========================================================================= -->
+  <script>
+    let currentAdminToken = sessionStorage.getItem('cx_admin_token') || null;
+    let adminData = { contacts: [], subscribers: [], stats: {}, system: {} };
+    let currentViewingTicket = null;
+
+    // Toast Messenger
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast-item-light toast-${type}`;
+      
+      let icon = 'fi fi-rr-info';
+      if (type === 'success') icon = 'fi fi-rr-check-circle';
+      if (type === 'error') icon = 'fi fi-rr-cross-circle';
+      
+      toast.innerHTML = `<i class="${icon}" style="font-size: 1.1rem; color: ${type === 'success' ? 'var(--success)' : (type === 'error' ? 'var(--danger)' : 'var(--brand-blue)')};"></i><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+      const pwInput = document.getElementById('loginPassword');
+      const icon = document.getElementById('pwToggleIcon');
+      if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        icon.className = 'fi fi-rr-eye-crossed';
+      } else {
+        pwInput.type = 'password';
+        icon.className = 'fi fi-rr-eye';
+      }
+    }
+
+    // Quick Fill Demo Credentials
+    function quickFillCredentials() {
+      document.getElementById('loginUsername').value = 'admin';
+      document.getElementById('loginPassword').value = 'admin123';
+      showToast('Credentials filled. Click "Authenticate Session".', 'info');
+    }
+
+    // Sidebar Collapse Toggle
+    function toggleSidebarCollapse() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed');
+      const icon = document.getElementById('sidebarToggleIcon');
+      if (sidebar.classList.contains('collapsed')) {
+        icon.className = 'fi fi-rr-arrow-right';
+      } else {
+        icon.className = 'fi fi-rr-sidebar';
+      }
+    }
+
+    // Mobile Sidebar Toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('mobile-open');
+    }
+
+    // Tab Navigation
+    function navigateTab(tabId, el) {
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.tab-section-block').forEach(sec => sec.classList.remove('active'));
+
+      if (el) el.classList.add('active');
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+
+      // Update breadcrumb
+      const names = {
+        'tabOverview': 'Dashboard',
+        'tabTickets': 'Support Inquiries',
+        'tabSubscribers': 'Newsletter Audience',
+        'tabSubscriptions': 'Subscriptions & Users',
+        'tabTelemetry': 'Engine Telemetry',
+        'tabSettings': 'System & Storage'
+      };
+      document.getElementById('currentBreadcrumb').textContent = names[tabId] || 'Dashboard';
+
+      // On mobile, close sidebar after clicking
+      if (window.innerWidth <= 992) {
+        document.getElementById('sidebar').classList.remove('mobile-open');
+      }
+    }
+
+    // Auth Initialization on Load
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (currentAdminToken) {
+        try {
+          const res = await fetch('/api/admin/verify', {
+            headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+          });
+          const result = await res.json();
+          if (result.success && result.valid) {
+            revealDashboard();
+            fetchAdminData();
+            return;
+          }
+        } catch (e) {
+          console.warn('Session verification error:', e);
+        }
+      }
+      showLogin();
+    });
+
+    function showLogin() {
+      sessionStorage.removeItem('cx_admin_token');
+      currentAdminToken = null;
+      document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('adminApp').style.display = 'none';
+    }
+
+    function revealDashboard() {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'flex';
+    }
+
+    // Login Handler
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const btn = document.getElementById('loginSubmitBtn');
+
+      if (!user || !pass) {
+        showToast('Please fill out both username and password.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fi fi-rr-spinner fi-spin"></i><span>Authenticating...</span>`;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          currentAdminToken = data.token;
+          sessionStorage.setItem('cx_admin_token', data.token);
+          showToast(`Welcome back, ${data.user}! Session authenticated.`, 'success');
+          revealDashboard();
+          fetchAdminData();
+        } else {
+          showToast(data.error || 'Invalid credentials. Try admin / admin123', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Cannot connect to backend server on port 3000.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fi fi-rr-sign-in-alt"></i><span>Authenticate Session</span>`;
+      }
+    }
+
+    // Logout
+    async function adminLogout() {
+      try {
+        if (currentAdminToken) {
+          await fetch('/api/admin/logout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+          });
+        }
+      } catch (e) {}
+      showToast('Session logged out successfully.', 'info');
+      showLogin();
+    }
+
+    // Fetch Full Data
+    async function fetchAdminData(showToastNotice = false) {
+      if (!currentAdminToken) return;
+
+      try {
+        const res = await fetch('/api/admin/data', {
+          headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+        });
+
+        if (res.status === 401) {
+          showToast('Admin session expired. Please sign in again.', 'error');
+          showLogin();
+          return;
+        }
+
+        const data = await res.json();
+        if (data.success) {
+          adminData = data;
+          renderMetrics(data.stats, data.contacts, data.subscribers);
+          renderTicketsTable(data.contacts || []);
+          renderSubscribersTable(data.subscribers || []);
+          renderSubscriptionsTable(data.subscriptions || [], data.users || []);
+          renderTelemetryGauges(data.system || {});
+          renderOverviewPreviews(data.contacts || []);
+
+          if (showToastNotice) {
+            showToast('Admin metrics synced from server.', 'success');
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching admin data:', err);
+        showToast('Error syncing with backend server.', 'error');
+      }
+    }
+
+    // Render Metrics
+    function renderMetrics(stats = {}, contacts = [], subscribers = []) {
+      const optCount = stats.imagesOptimized || 0;
+      const mbSaved = stats.totalMbSaved || 0;
+
+      document.getElementById('kpiOverviewOptimized').textContent = optCount.toLocaleString();
+      
+      if (mbSaved > 1024) {
+        document.getElementById('kpiOverviewSaved').textContent = (mbSaved / 1024).toFixed(1) + ' GB';
+      } else {
+        document.getElementById('kpiOverviewSaved').textContent = mbSaved.toLocaleString() + ' MB';
+      }
+
+      document.getElementById('kpiOverviewInquiries').textContent = contacts.length;
+      document.getElementById('sidebarBadgeTickets').textContent = contacts.length;
+
+      const openTickets = contacts.filter(c => c.status === 'open').length;
+      document.getElementById('kpiOverviewInquiriesSub').innerHTML = `
+        <i class="fi fi-rr-clock" style="color: ${openTickets > 0 ? 'var(--warning)' : 'var(--success)'};"></i>
+        <span>${openTickets} open pending ${openTickets === 1 ? 'ticket' : 'tickets'}</span>
+      `;
+
+      document.getElementById('kpiOverviewSubscribers').textContent = subscribers.length;
+      document.getElementById('sidebarBadgeSubscribers').textContent = subscribers.length;
+      document.getElementById('subscriberTotalCountLabel').textContent = `Total: ${subscribers.length} Subscribers`;
+
+      // Revenue and Subscriptions
+      const revenue = stats.revenuePkr || 0;
+      const revEl = document.getElementById('kpiOverviewRevenue');
+      if (revEl) revEl.textContent = `Rs. ${revenue.toLocaleString()}`;
+
+      const paidSubs = stats.paidSubscribers || (adminData.subscriptions ? adminData.subscriptions.length : 0);
+      const paidSubsEl = document.getElementById('kpiOverviewPaidSubs');
+      if (paidSubsEl) paidSubsEl.textContent = `${paidSubs} Active Pro Subscriptions`;
+
+      const subBadge = document.getElementById('sidebarBadgeSubscriptions');
+      if (subBadge) subBadge.textContent = adminData.subscriptions ? adminData.subscriptions.length : 0;
+
+      const usersCountEl = document.getElementById('subTotalUsersCountLabel');
+      if (usersCountEl) {
+        const totalU = (adminData.users || []).length;
+        usersCountEl.textContent = `${totalU} Registered Customer${totalU === 1 ? '' : 's'}`;
+      }
+    }
+
+    // Render Tickets Table
+    function renderTicketsTable(tickets) {
+      const tbody = document.getElementById('ticketsTableBody');
+      const empty = document.getElementById('ticketsEmptyState');
+      tbody.innerHTML = '';
+
+      if (!tickets || tickets.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      const sorted = [...tickets].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      sorted.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.dataset.ticketId = t.ticketId;
+        tr.dataset.status = t.status || 'open';
+        tr.dataset.search = `${t.ticketId} ${t.name} ${t.email} ${t.subject} ${t.message}`.toLowerCase();
+
+        const dateStr = t.createdAt ? new Date(t.createdAt).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : '--';
+
+        const statusClass = t.status === 'resolved' ? 'badge-chip-resolved' : (t.status === 'in-progress' ? 'badge-chip-progress' : 'badge-chip-open');
+        const statusLabel = t.status === 'resolved' ? 'Resolved' : (t.status === 'in-progress' ? 'In Progress' : 'Open');
+
+        const initials = (t.name || 'User').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+        tr.innerHTML = `
+          <td><span class="ticket-mono-tag">${escapeHtml(t.ticketId)}</span></td>
+          <td>
+            <div class="sender-group">
+              <div class="sender-avatar-initials">${initials}</div>
+              <div class="sender-text-block">
+                <span class="sender-name-text">${escapeHtml(t.name)}</span>
+                <span class="sender-email-text">${escapeHtml(t.email)}</span>
+              </div>
+            </div>
+          </td>
+          <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600;">
+            ${escapeHtml(t.subject)}
+          </td>
+          <td style="font-size: 0.82rem; color: var(--text-muted); white-space: nowrap;">
+            ${dateStr}
+          </td>
+          <td>
+            <span class="status-badge-chip ${statusClass}">
+              <span style="font-size: 0.8em;">●</span> ${statusLabel}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <div class="row-actions-group">
+              <button class="btn-row-action view" title="View & Reply" onclick="openTicketModal('${t.ticketId}')">
+                <i class="fi fi-rr-eye"></i>
+              </button>
+              <a href="mailto:${encodeURIComponent(t.email)}?subject=Re: ${encodeURIComponent(t.subject)} [${t.ticketId}]" class="btn-row-action" title="Send Direct Email">
+                <i class="fi fi-rr-paper-plane"></i>
+              </a>
+              <button class="btn-row-action del" title="Delete Ticket" onclick="deleteTicket('${t.ticketId}')">
+                <i class="fi fi-rr-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Filter Tickets
+    function filterTicketsTable() {
+      const query = (document.getElementById('ticketSearchInput').value || '').toLowerCase().trim();
+      const status = document.getElementById('ticketStatusFilter').value;
+      const rows = document.querySelectorAll('#ticketsTableBody tr');
+      let visible = 0;
+
+      rows.forEach(r => {
+        const matchesQuery = !query || (r.dataset.search && r.dataset.search.includes(query));
+        const matchesStatus = status === 'all' || r.dataset.status === status;
+
+        if (matchesQuery && matchesStatus) {
+          r.style.display = '';
+          visible++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      document.getElementById('ticketsEmptyState').style.display = (visible === 0 && rows.length > 0) ? 'block' : 'none';
+    }
+
+    // Modal Details
+    function openTicketModal(ticketId) {
+      const ticket = (adminData.contacts || []).find(t => t.ticketId === ticketId);
+      if (!ticket) return;
+
+      currentViewingTicket = ticket;
+      document.getElementById('modalTicketId').textContent = ticket.ticketId;
+      document.getElementById('modalTicketDate').textContent = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : '--';
+      document.getElementById('modalSenderName').textContent = ticket.name || 'Anonymous';
+      document.getElementById('modalSenderEmail').textContent = ticket.email || '--';
+      document.getElementById('modalSubject').textContent = ticket.subject || '(No Subject)';
+      document.getElementById('modalMessage').textContent = ticket.message || '';
+      document.getElementById('modalStatusSelect').value = ticket.status || 'open';
+
+      const replyBtn = document.getElementById('modalReplyBtn');
+      replyBtn.href = `mailto:${encodeURIComponent(ticket.email)}?subject=Re: ${encodeURIComponent(ticket.subject)} [${ticket.ticketId}]&body=Hi ${encodeURIComponent(ticket.name)},%0D%0A%0D%0AThank you for reaching out to Compress-X Studio.%0D%0A`;
+
+      document.getElementById('ticketModal').classList.add('active');
+    }
+
+    function closeTicketModal() {
+      document.getElementById('ticketModal').classList.remove('active');
+      currentViewingTicket = null;
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'ticketModal') {
+        closeTicketModal();
+      }
+    }
+
+    // Update Status
+    async function updateTicketStatusFromModal() {
+      if (!currentViewingTicket || !currentAdminToken) return;
+
+      const newStatus = document.getElementById('modalStatusSelect').value;
+      try {
+        const res = await fetch('/api/admin/ticket-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentAdminToken}`
+          },
+          body: JSON.stringify({
+            ticketId: currentViewingTicket.ticketId,
+            status: newStatus
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          currentViewingTicket.status = newStatus;
+          showToast(`Ticket ${currentViewingTicket.ticketId} updated to ${newStatus}.`, 'success');
+          fetchAdminData();
+        } else {
+          showToast(data.error || 'Failed to update status.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Network error updating ticket status.', 'error');
+      }
+    }
+
+    // Delete Ticket
+    async function deleteTicket(ticketId) {
+      if (!confirm(`Delete ticket ${ticketId}? This action cannot be undone.`)) return;
+
+      try {
+        const res = await fetch(`/api/admin/ticket/${ticketId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Ticket ${ticketId} deleted.`, 'info');
+          if (currentViewingTicket && currentViewingTicket.ticketId === ticketId) {
+            closeTicketModal();
+          }
+          fetchAdminData();
+        } else {
+          showToast(data.error || 'Failed to delete ticket.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Network error deleting ticket.', 'error');
+      }
+    }
+
+    // Render Subscribers Table
+    function renderSubscribersTable(subscribers) {
+      const tbody = document.getElementById('subscribersTableBody');
+      const empty = document.getElementById('subscribersEmptyState');
+      tbody.innerHTML = '';
+
+      if (!subscribers || subscribers.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      const sorted = [...subscribers].sort((a, b) => new Date(b.subscribedAt) - new Date(a.subscribedAt));
+
+      sorted.forEach((sub, idx) => {
+        const tr = document.createElement('tr');
+        tr.dataset.email = (sub.email || '').toLowerCase();
+
+        const dateStr = sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : '--';
+
+        tr.innerHTML = `
+          <td style="color: var(--text-subtle); font-family: var(--font-mono); font-size: 0.8rem;">${idx + 1}</td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <i class="fi fi-rr-envelope" style="color: var(--brand-blue);"></i>
+              <strong style="color: var(--text-heading); font-size: 0.9rem;">${escapeHtml(sub.email)}</strong>
+            </div>
+          </td>
+          <td style="font-size: 0.82rem; color: var(--text-muted);">
+            ${dateStr}
+          </td>
+          <td style="text-align: right;">
+            <div class="row-actions-group">
+              <button class="btn-row-action" title="Copy Email" onclick="copyToClipboard('${escapeHtml(sub.email)}')">
+                <i class="fi fi-rr-copy"></i>
+              </button>
+              <button class="btn-row-action del" title="Remove Subscriber" onclick="deleteSubscriber('${encodeURIComponent(sub.email)}')">
+                <i class="fi fi-rr-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterSubscribersTable() {
+      const query = (document.getElementById('subscriberSearchInput').value || '').toLowerCase().trim();
+      const rows = document.querySelectorAll('#subscribersTableBody tr');
+      let visible = 0;
+
+      rows.forEach(r => {
+        if (!query || (r.dataset.email && r.dataset.email.includes(query))) {
+          r.style.display = '';
+          visible++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      document.getElementById('subscribersEmptyState').style.display = (visible === 0 && rows.length > 0) ? 'block' : 'none';
+    }
+
+    // Delete Subscriber
+    async function deleteSubscriber(encodedEmail) {
+      const email = decodeURIComponent(encodedEmail);
+      if (!confirm(`Remove ${email} from subscriber list?`)) return;
+
+      try {
+        const res = await fetch(`/api/admin/subscriber/${encodedEmail}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Subscriber ${email} removed.`, 'info');
+          fetchAdminData();
+        } else {
+          showToast(data.error || 'Failed to remove subscriber.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Network error removing subscriber.', 'error');
+      }
+    }
+
+    // Export CSV
+    function exportSubscribersCSV() {
+      if (!currentAdminToken) return;
+      window.location.href = `/api/admin/subscribers-csv?token=${encodeURIComponent(currentAdminToken)}`;
+      showToast('Downloading subscribers CSV...', 'success');
+    }
+
+    // Render Subscriptions & Registered Users Table
+    function renderSubscriptionsTable(subscriptions = [], users = []) {
+      const tbody = document.getElementById('subscriptionsTableBody');
+      const empty = document.getElementById('subscriptionsEmptyState');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if ((!users || users.length === 0) && (!subscriptions || subscriptions.length === 0)) {
+        if (empty) empty.style.display = 'block';
+        return;
+      }
+      if (empty) empty.style.display = 'none';
+
+      // Combine users and subscription transactions
+      const displayItems = [];
+
+      users.forEach(u => {
+        const sub = (subscriptions || []).find(s => s.userId === u.id || s.userEmail === u.email) || u.subscription;
+        displayItems.push({
+          user: u,
+          sub: sub,
+          plan: u.plan || (sub ? sub.plan : 'free'),
+          paidAt: sub ? (sub.paidAt || sub.timestamp) : u.createdAt
+        });
+      });
+
+      // Also include any subscription records that might not be in users array
+      subscriptions.forEach(s => {
+        if (!displayItems.some(item => item.user.email === s.userEmail || (item.sub && item.sub.transactionId === s.transactionId))) {
+          displayItems.push({
+            user: { name: s.userName || s.cardholderName || 'Customer', email: s.userEmail, plan: s.plan },
+            sub: s,
+            plan: s.plan,
+            paidAt: s.paidAt || s.timestamp
+          });
+        }
+      });
+
+      // Sort newest first
+      displayItems.sort((a, b) => new Date(b.paidAt || 0) - new Date(a.paidAt || 0));
+
+      displayItems.forEach(item => {
+        const tr = document.createElement('tr');
+        const plan = (item.plan || 'free').toLowerCase();
+        tr.dataset.plan = plan;
+        tr.dataset.search = `${item.user.name} ${item.user.email} ${plan} ${item.sub ? item.sub.invoiceNo || '' : ''} ${item.sub ? item.sub.transactionId || '' : ''}`.toLowerCase();
+
+        const initials = (item.user.name || 'User').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        
+        let planBadgeHtml = '';
+        if (plan === 'pro') {
+          planBadgeHtml = '<span class="status-badge-chip badge-chip-resolved"><span style="font-size:0.8em;">●</span> PRO STUDIO</span>';
+        } else if (plan === 'team') {
+          planBadgeHtml = '<span class="status-badge-chip badge-chip-progress"><span style="font-size:0.8em;">●</span> TEAM & API</span>';
+        } else {
+          planBadgeHtml = '<span class="status-badge-chip badge-chip-open">FREE TIER</span>';
+        }
+
+        const amountText = item.sub ? `Rs. ${(item.sub.amountPkr || 0).toLocaleString()} PKR` : 'Rs. 0 PKR';
+        const cycleText = item.sub ? (item.sub.billingCycle === 'yearly' ? 'Annual (20% OFF)' : 'Monthly') : 'Lifetime';
+        
+        let paymentMethodHtml = '<span style="color: var(--text-subtle);">None required</span>';
+        if (item.sub && item.sub.cardBrand) {
+          const isMaster = item.sub.cardBrand.toLowerCase().includes('master');
+          paymentMethodHtml = `
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="card-brand-badge ${isMaster ? 'mastercard-badge' : 'visa-badge'}" style="font-size: 0.68rem; padding: 2px 6px;">
+                ${escapeHtml(item.sub.cardBrand)}
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;">•••• ${escapeHtml(item.sub.cardLast4 || '4242')}</span>
+            </div>
+          `;
+        }
+
+        const dateStr = item.paidAt ? new Date(item.paidAt).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', year: 'numeric'
+        }) : '--';
+
+        const statusBadge = item.sub && item.sub.status === 'cancelled'
+          ? '<span class="status-badge-chip badge-chip-open">Cancelled</span>'
+          : '<span class="status-badge-chip badge-chip-resolved">Active</span>';
+
+        tr.innerHTML = `
+          <td>
+            <div class="sender-group">
+              <div class="sender-avatar-initials">${initials}</div>
+              <div class="sender-text-block">
+                <span class="sender-name-text">${escapeHtml(item.user.name)}</span>
+                <span class="sender-email-text">${escapeHtml(item.user.email)}</span>
+              </div>
+            </div>
+          </td>
+          <td>${planBadgeHtml}</td>
+          <td><strong style="color: var(--brand-blue);">${amountText}</strong></td>
+          <td style="font-size: 0.82rem; color: var(--text-muted);">${cycleText}</td>
+          <td>${paymentMethodHtml}</td>
+          <td style="font-size: 0.82rem; color: var(--text-muted);">${dateStr}</td>
+          <td>${statusBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterSubscriptionsTable() {
+      const query = (document.getElementById('subSearchInput').value || '').toLowerCase().trim();
+      const plan = document.getElementById('subPlanFilter').value;
+      const rows = document.querySelectorAll('#subscriptionsTableBody tr');
+      let visible = 0;
+
+      rows.forEach(r => {
+        const matchesQuery = !query || (r.dataset.search && r.dataset.search.includes(query));
+        const matchesPlan = plan === 'all' || r.dataset.plan === plan;
+
+        if (matchesQuery && matchesPlan) {
+          r.style.display = '';
+          visible++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      const empty = document.getElementById('subscriptionsEmptyState');
+      if (empty) empty.style.display = (visible === 0 && rows.length > 0) ? 'block' : 'none';
+    }
+
+    // Render Telemetry
+    function renderTelemetryGauges(sys) {
+      document.getElementById('ovNodeVersion').textContent = sys.nodeVersion || '--';
+      document.getElementById('telemNodeVersion').textContent = sys.nodeVersion || '--';
+
+      const uptimeSec = sys.uptimeSeconds || 0;
+      const hours = Math.floor(uptimeSec / 3600);
+      const mins = Math.floor((uptimeSec % 3600) / 60);
+      const secs = uptimeSec % 60;
+      const uptimeStr = `${hours}h ${mins}m ${secs}s`;
+
+      document.getElementById('ovUptime').textContent = uptimeStr;
+      document.getElementById('telemUptime').textContent = uptimeStr;
+
+      document.getElementById('telemRss').textContent = (sys.memoryUsageMB || 0) + ' MB';
+      document.getElementById('telemHeap').textContent = (sys.heapUsedMB || 0) + ' MB';
+      document.getElementById('telemPlatform').textContent = sys.platform || '--';
+
+      const dbLabel = adminData.databaseEngine || (adminData.supabaseConnected ? 'Supabase Cloud (PostgreSQL)' : 'Hybrid Local (data/db.json)');
+      const ovDb = document.getElementById('ovDbEngine');
+      const telemDb = document.getElementById('telemDbEngine');
+      if (ovDb) {
+        ovDb.textContent = dbLabel;
+        if (dbLabel.includes('Supabase')) {
+          ovDb.style.color = '#10b981';
+          ovDb.style.fontWeight = '700';
+        }
+      }
+      if (telemDb) {
+        telemDb.textContent = dbLabel;
+        if (dbLabel.includes('Supabase')) {
+          telemDb.style.color = '#10b981';
+          telemDb.style.fontWeight = '700';
+        }
+      }
+    }
+
+    // Overview Tab Previews
+    function renderOverviewPreviews(contacts) {
+      const container = document.getElementById('overviewTicketsList');
+      if (!contacts || contacts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 1.5rem 0; color: var(--text-muted); font-size: 0.85rem;">
+            <i class="fi fi-rr-check-circle" style="font-size: 1.5rem; color: var(--success); display: block; margin-bottom: 0.5rem;"></i>
+            All customer inquiries resolved
+          </div>
+        `;
+        return;
+      }
+
+      const recent = contacts.slice(-3).reverse();
+      let html = '';
+      recent.forEach(t => {
+        const statusBadge = t.status === 'resolved' ? 'badge-chip-resolved' : (t.status === 'in-progress' ? 'badge-chip-progress' : 'badge-chip-open');
+        html += `
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 700; color: var(--text-heading); font-size: 0.88rem;">${escapeHtml(t.name)}</div>
+              <div style="color: var(--text-muted); font-size: 0.78rem;">${escapeHtml(t.subject)}</div>
+            </div>
+            <span class="status-badge-chip ${statusBadge}" style="font-size: 0.7rem;">
+              ${escapeHtml(t.status || 'open')}
+            </span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Utilities
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`Copied "${text}" to clipboard.`, 'success');
+      }).catch(() => {
+        showToast('Failed to copy to clipboard.', 'error');
+      });
+    }
+  </script>
+</body>
+</html>

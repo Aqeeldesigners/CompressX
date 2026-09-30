@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Local Database & runtime data
+data/
+
+# Vercel deployment metadata
+.vercel/
+
+# Logs & Temp Files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
