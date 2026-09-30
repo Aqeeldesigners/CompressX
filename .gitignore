@@ -23,3 +23,16 @@ yarn-error.log*
 # OS Generated Files
 .DS_Store
 Thumbs.db
+
+# Agent & IDE workspace folders
+.agent/
+.agents/
+.gemini/
+.gsd/
+GSD-STYLE.md
+PROJECT_RULES.md
+VERSION
+adapters/
+model_capabilities.yaml
+scripts/
+
